@@ -34,24 +34,29 @@ def setup_orchestration(architect, coder, reviewer, tester, user_proxy):
         if not messages:
             return architect # 从架构师开始
         
+        last_msg = messages[-1]
+        
+        # 处理工具调用：如果有 tool_calls，由调用者自己执行（Auto-Execute）
+        if "tool_calls" in last_msg and last_msg["tool_calls"]:
+            return last_speaker
+
         last_speaker_name = last_speaker.name
         
-        if last_speaker_name == "User":
-            return architect
-        elif last_speaker_name == "Architect":
+        if last_speaker_name == "Architect":
             return coder
         elif last_speaker_name == "Coder":
+            # Coder 完成工作（无论是写代码建议还是执行工具得到结果），都交给 Reviewer
             return reviewer
         elif last_speaker_name == "Reviewer":
             # 如果审核员批准，进入测试环节，否则返回 Coder 处修改
-            last_msg = messages[-1]["content"].upper()
-            if "APPROVE" in last_msg or "LOOKS GOOD" in last_msg:
+            content = last_msg.get("content", "")
+            if content and ("APPROVE" in content.upper() or "LOOKS GOOD" in content.upper()):
                 return tester
             return coder
         elif last_speaker_name == "Tester":
             # 如果测试通过，终止或询问用户，否则返回 Coder 调试
-            last_msg = messages[-1]["content"].upper()
-            if "FAIL" in last_msg or "ERROR" in last_msg:
+            content = last_msg.get("content", "")
+            if content and ("FAIL" in content.upper() or "ERROR" in content.upper()):
                 return coder
             return user_proxy
         

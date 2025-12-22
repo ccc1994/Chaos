@@ -48,13 +48,24 @@ def create_agents(api_key: str, base_url: str):
         # Handle "None" or empty string to disable caching
         cache_seed = None if cache_seed_raw.lower() == "none" or not cache_seed_raw else int(cache_seed_raw)
         
+        # 价格配置 (单位: 元/1k tokens)
+        prices = {
+            "qwen-plus-2025-07-28": [0.0008, 0.002],
+            "qwen-flash-2025-07-28": [0.00015, 0.0015]
+        }
+        
+        config = {
+            "model": model_id,
+            "api_key": api_key,
+            "base_url": base_url,
+            "api_type": "openai",
+        }
+        
+        if model_id in prices:
+            config["price"] = prices[model_id]
+            
         return {
-            "config_list": [{
-                "model": model_id,
-                "api_key": api_key,
-                "base_url": base_url,
-                "api_type": "openai",
-            }],
+            "config_list": [config],
             "cache_seed": cache_seed
         }
 
