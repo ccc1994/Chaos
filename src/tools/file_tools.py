@@ -1,5 +1,6 @@
 import os
 import re
+import shutil
 from rich.prompt import Confirm
 from rich.console import Console
 
@@ -58,6 +59,82 @@ def search_code(query: str, path: str = ".") -> str:
                 continue
     return "\n".join(results) if results else "未找到匹配项。"
 
+def create_directory(path: str) -> str:
+    """创建目录（包括父目录）。"""
+    try:
+        os.makedirs(path, exist_ok=True)
+        return f"目录 '{path}' 创建成功。"
+    except Exception as e:
+        return f"创建目录失败：{str(e)}"
+
+def delete_file(path: str) -> str:
+    """删除文件或目录。"""
+    try:
+        if os.path.isfile(path):
+            os.remove(path)
+            return f"文件 '{path}' 已删除。"
+        elif os.path.isdir(path):
+            shutil.rmtree(path)
+            return f"目录 '{path}' 已删除。"
+        else:
+            return f"错误：'{path}' 不存在。"
+    except Exception as e:
+        return f"删除失败：{str(e)}"
+
+def list_directory(path: str = ".") -> str:
+    """列出目录内容。"""
+    try:
+        if not os.path.exists(path):
+            return f"错误：目录 '{path}' 不存在。"
+        
+        items = os.listdir(path)
+        if not items:
+            return f"目录 '{path}' 为空。"
+        
+        result = []
+        for item in sorted(items):
+            item_path = os.path.join(path, item)
+            if os.path.isdir(item_path):
+                result.append(f"[DIR]  {item}/")
+            else:
+                size = os.path.getsize(item_path)
+                result.append(f"[FILE] {item} ({size} bytes)")
+        
+        return "\n".join(result)
+    except Exception as e:
+        return f"列出目录失败：{str(e)}"
+
+def move_file(src: str, dst: str) -> str:
+    """移动或重命名文件/目录。"""
+    try:
+        if not os.path.exists(src):
+            return f"错误：源路径 '{src}' 不存在。"
+        
+        shutil.move(src, dst)
+        return f"'{src}' 已移动到 '{dst}'。"
+    except Exception as e:
+        return f"移动失败：{str(e)}"
+
+def file_exists(path: str) -> str:
+    """检查文件或目录是否存在。"""
+    if os.path.exists(path):
+        if os.path.isfile(path):
+            size = os.path.getsize(path)
+            return f"文件 '{path}' 存在 ({size} bytes)。"
+        elif os.path.isdir(path):
+            return f"目录 '{path}' 存在。"
+    return f"'{path}' 不存在。"
+
 def get_file_tools():
     """返回用于文件操作的工具列表。"""
-    return [read_file, write_file, insert_code, search_code]
+    return [
+        read_file, 
+        write_file, 
+        insert_code, 
+        search_code,
+        create_directory,
+        delete_file,
+        list_directory,
+        move_file,
+        file_exists
+    ]
