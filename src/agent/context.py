@@ -1,0 +1,32 @@
+import os
+import json
+
+def get_file_tree(path: str = ".") -> str:
+    """Generates a simple file tree string. (Level 1 Context)"""
+    tree = []
+    for root, dirs, files in os.walk(path):
+        if any(x in root for x in [".git", ".ca", "node_modules", "__pycache__"]):
+            continue
+        level = root.replace(path, "").count(os.sep)
+        indent = " " * 4 * level
+        tree.append(f"{indent}{os.path.basename(root)}/")
+        sub_indent = " " * 4 * (level + 1)
+        for f in files:
+            tree.append(f"{sub_indent}{f}")
+    return "\n".join(tree)
+
+def get_level1_context(project_root: str) -> str:
+    """Compiles Level 1 mandatory context."""
+    tree = get_file_tree(project_root)
+    # Check for active todo_list in .ca
+    todo_list = ""
+    ca_todo = os.path.join(project_root, ".ca", "todo_list.md")
+    if os.path.exists(ca_todo):
+        with open(ca_todo, "r") as f:
+            todo_list = f.read()
+            
+    context = f"--- Level 1 Context ---\n[Project Structure]\n{tree}\n"
+    if todo_list:
+        context += f"\n[Todo List]\n{todo_list}\n"
+    context += "-----------------------\n"
+    return context
