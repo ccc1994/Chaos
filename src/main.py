@@ -12,6 +12,11 @@ from rich.panel import Panel
 from rich.markdown import Markdown
 from rich.prompt import Prompt
 
+try:
+    import readline
+except ImportError:
+    pass
+
 from src.agent.manager import ensure_project_setup
 from src.agent.agents import create_agents
 from src.agent.orchestrator import setup_orchestration, start_multi_agent_session
@@ -22,7 +27,7 @@ console = Console()
 def main():
     # 1. 初始化
     load_dotenv()
-    project_root = os.getcwd()
+    project_root = os.path.join(os.getcwd(), "playground")
     ensure_project_setup(project_root)
 
     # 2. 配置检查
@@ -50,10 +55,10 @@ def main():
     ))
     console.print("[yellow]输入 'exit' 退出。规范驱动开发已激活。[/yellow]\n")
 
-    # 5. Interaction Loop
+    # 5. 交互循环
     while True:
         try:
-            user_input = Prompt.ask("[bold green]User[/bold green]")
+            user_input = console.input("[bold green]>[/bold green] ")
             
             if user_input.lower() in ["exit", "quit"]:
                 console.print("[yellow]正在关闭... 再见！[/yellow]")
