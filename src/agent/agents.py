@@ -68,6 +68,11 @@ def create_agents(api_key: str, base_url: str):
             "config_list": [config],
             "cache_seed": cache_seed
         }
+    
+    def make_manager_config():
+        """为 GroupChatManager 创建轻量级配置，使用最便宜的模型"""
+        manager_model = "qwen-flash-2025-07-28"  # 使用最便宜、最快的模型
+        return make_config(manager_model)
 
     architect = AssistantAgent(
         name="Architect",
@@ -101,4 +106,4 @@ def create_agents(api_key: str, base_url: str):
         code_execution_config=False
     )
 
-    return architect, coder, reviewer, tester, user_proxy
+    return architect, coder, reviewer, tester, user_proxy, make_manager_config()

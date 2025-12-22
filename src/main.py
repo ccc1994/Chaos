@@ -41,8 +41,8 @@ def main():
     # 3. Agent 与编排设置
     with console.status("[bold green]正在初始化多 Agent 系统...[/bold green]"):
         try:
-            architect, coder, reviewer, tester, user_proxy = create_agents(api_key, base_url)
-            manager = setup_orchestration(architect, coder, reviewer, tester, user_proxy)
+            architect, coder, reviewer, tester, user_proxy, manager_config = create_agents(api_key, base_url)
+            manager = setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_config)
         except Exception as e:
             console.print(f"[bold red]系统初始化出错：[/bold red] {e}")
             sys.exit(1)
