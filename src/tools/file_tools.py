@@ -7,9 +7,10 @@ from rich.console import Console
 console = Console()
 
 def read_file(path: str) -> str:
-    """读取文件内容。（第二级上下文）"""
+    """读取文件内容"""
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
+read_file.tool_type = "read"  # 添加工具类型标识
 
 def write_file(path: str, content: str) -> str:
     """将内容写入文件。"""
@@ -25,6 +26,7 @@ def write_file(path: str, content: str) -> str:
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
     return f"文件 '{path}' 写入成功。备份已创建为 '{backup_path}'。"
+write_file.tool_type = "write"  # 添加工具类型标识
 
 def insert_code(path: str, line_number: int, content: str) -> str:
     """在特定行号插入代码。"""
@@ -41,6 +43,7 @@ def insert_code(path: str, line_number: int, content: str) -> str:
     with open(path, "w", encoding="utf-8") as f:
         f.writelines(lines)
     return f"代码已成功插入到 '{path}' 的第 {line_number} 行。"
+insert_code.tool_type = "write"  # 添加工具类型标识
 
 def search_code(query: str, path: str = ".") -> str:
     """在文件中搜索特定模式。（第三级上下文）"""
@@ -58,6 +61,7 @@ def search_code(query: str, path: str = ".") -> str:
             except (UnicodeDecodeError, PermissionError):
                 continue
     return "\n".join(results) if results else "未找到匹配项。"
+search_code.tool_type = "read"  # 添加工具类型标识
 
 def edit_block(path: str, pattern: str, replacement: str, is_regex: bool = False) -> str:
     """
@@ -112,6 +116,7 @@ def edit_block(path: str, pattern: str, replacement: str, is_regex: bool = False
         return f"正则表达式错误：{str(e)}"
     except Exception as e:
         return f"编辑失败：{str(e)}"
+edit_block.tool_type = "write"  # 添加工具类型标识
 
 def create_directory(path: str) -> str:
     """创建目录（包括父目录）。"""
@@ -120,6 +125,7 @@ def create_directory(path: str) -> str:
         return f"目录 '{path}' 创建成功。"
     except Exception as e:
         return f"创建目录失败：{str(e)}"
+create_directory.tool_type = "write"  # 添加工具类型标识
 
 def delete_file(path: str) -> str:
     """删除文件或目录。"""
@@ -134,6 +140,7 @@ def delete_file(path: str) -> str:
             return f"错误：'{path}' 不存在。"
     except Exception as e:
         return f"删除失败：{str(e)}"
+delete_file.tool_type = "write"  # 添加工具类型标识
 
 def list_directory(path: str = ".") -> str:
     """列出目录内容。"""
@@ -157,6 +164,7 @@ def list_directory(path: str = ".") -> str:
         return "\n".join(result)
     except Exception as e:
         return f"列出目录失败：{str(e)}"
+list_directory.tool_type = "read"  # 添加工具类型标识
 
 def move_file(src: str, dst: str) -> str:
     """移动或重命名文件/目录。"""
@@ -168,6 +176,7 @@ def move_file(src: str, dst: str) -> str:
         return f"'{src}' 已移动到 '{dst}'。"
     except Exception as e:
         return f"移动失败：{str(e)}"
+move_file.tool_type = "write"  # 添加工具类型标识
 
 def file_exists(path: str) -> str:
     """检查文件或目录是否存在。"""
@@ -178,10 +187,19 @@ def file_exists(path: str) -> str:
         elif os.path.isdir(path):
             return f"目录 '{path}' 存在。"
     return f"'{path}' 不存在。"
+file_exists.tool_type = "read"  # 添加工具类型标识
 
-def get_file_tools():
-    """返回用于文件操作的工具列表。"""
-    return [
+def get_file_tools(tool_type: str = None) -> list:
+    """
+    返回用于文件操作的工具列表。
+    
+    Args:
+        tool_type: 可选参数，指定工具类型。如果为 None，则返回所有工具；如果为 "read"，则返回只读工具；如果为 "write"，则返回写入工具。
+    
+    Returns:
+        工具函数列表
+    """
+    all_tools = [
         read_file, 
         write_file, 
         insert_code, 
@@ -193,3 +211,8 @@ def get_file_tools():
         move_file,
         file_exists
     ]
+    
+    if tool_type is None:
+        return all_tools
+    else:
+        return [tool for tool in all_tools if hasattr(tool, 'tool_type') and tool.tool_type == tool_type]

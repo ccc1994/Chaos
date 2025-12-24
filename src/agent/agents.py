@@ -77,25 +77,29 @@ def create_agents(api_key: str, base_url: str):
     architect = AssistantAgent(
         name="Architect",
         system_message=configs["Architect"]["system_message"],
-        llm_config=make_config(configs["Architect"]["model"])
+        llm_config=make_config(configs["Architect"]["model"]),
+        code_execution_config={"work_dir": "playground", "use_docker": False}
     )
 
     coder = AssistantAgent(
         name="Coder",
         system_message=configs["Coder"]["system_message"],
-        llm_config=make_config(configs["Coder"]["model"])
+        llm_config=make_config(configs["Coder"]["model"]),
+        code_execution_config={"work_dir": "playground", "use_docker": False}
     )
 
     reviewer = AssistantAgent(
         name="Reviewer",
         system_message=configs["Reviewer"]["system_message"],
-        llm_config=make_config(configs["Reviewer"]["model"])
+        llm_config=make_config(configs["Reviewer"]["model"]),
+        code_execution_config={"work_dir": "playground", "use_docker": False}
     )
 
     tester = AssistantAgent(
         name="Tester",
         system_message=configs["Tester"]["system_message"],
-        llm_config=make_config(configs["Tester"]["model"])
+        llm_config=make_config(configs["Tester"]["model"]),
+        code_execution_config={"work_dir": "playground", "use_docker": False}
     )
 
     user_proxy = UserProxyAgent(
