@@ -71,7 +71,8 @@ def create_agents(api_key: str, base_url: str):
     
     def make_manager_config():
         """为 GroupChatManager 创建轻量级配置，使用最便宜的模型"""
-        manager_model = "qwen-flash-2025-07-28"  # 使用最便宜、最快的模型
+        default_model = os.getenv("DEFAULT_MODEL_ID")
+        manager_model = os.getenv("MANAGER_MODEL_ID") or default_model
         return make_config(manager_model)
 
     architect = AssistantAgent(
