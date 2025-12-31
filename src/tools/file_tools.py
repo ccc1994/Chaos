@@ -15,11 +15,6 @@ read_file.tool_type = "read"  # 添加工具类型标识
 def write_file(path: str, content: str) -> str:
     """将内容写入文件。"""
 
-    # 安全策略：写入前先备份
-    if os.path.exists(path):
-        with open(path, "r", encoding="utf-8") as f:
-            old_content = f.read()
-            
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
     return f"文件 '{path}' 写入成功"

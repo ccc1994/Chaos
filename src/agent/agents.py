@@ -52,7 +52,8 @@ def create_agents(api_key: str, base_url: str):
         # 价格配置 (单位: 元/1k tokens)
         prices = {
             "qwen-plus-2025-07-28": [0.0008, 0.002],
-            "qwen-flash-2025-07-28": [0.00015, 0.0015]
+            "qwen-flash-2025-07-28": [0.00015, 0.0015],
+            "qwen3-coder-plus": [0.00015, 0.0015],
         }
         
         config = {
@@ -105,7 +106,7 @@ def create_agents(api_key: str, base_url: str):
     user_proxy = UserProxyAgent(
         name="User",
         human_input_mode="NEVER",
-        max_consecutive_auto_reply=10,
+        max_consecutive_auto_reply=30,
         is_termination_msg=lambda x: "TERMINATE" in (x.get("content", "") or "").upper(),
         code_execution_config={"work_dir": "playground", "use_docker": False}
     )
