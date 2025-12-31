@@ -173,13 +173,17 @@ def setup_implementation_group_chat(coder, reviewer, tester, user_proxy,manager_
         speaker_transitions_type="allowed"
     )
 
+    # 从环境变量获取上下文压缩配置
+    max_context_length = int(os.getenv("CONTEXT_COMPRESS_MAX_LENGTH", "10000"))
+    preserve_recent_rounds = int(os.getenv("CONTEXT_COMPRESS_RECENT_ROUNDS", "5"))
+
     implementation_manager = ContextCompressingGroupChatManager(
         groupchat=implementation_groupchat,
         llm_config=manager_config,
         is_termination_msg=lambda x: "TERMINATE" in x.get("content", ""),
         description="负责接受并完成 architect 的任务",
-        max_context_length=10000,  # 上下文长度超过1w时触发压缩
-        preserve_recent_rounds=5   # 保留最近5个消息
+        max_context_length=max_context_length,
+        preserve_recent_rounds=preserve_recent_rounds
     )
 
     return implementation_manager
@@ -202,7 +206,7 @@ def setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_
         register_function(
             tool,
             caller=architect,
-            executor=user_proxy,
+            executor=architect,  # 改为architect自己执行，避免user_proxy权限问题
             name=tool.__name__,
             description=tool.__doc__
         )
@@ -253,15 +257,19 @@ def setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_
         if "TODO:" in full_content:
             return full_content.split("TODO:", 1)[-1].strip()
         return full_content
-    def task_trigger_condition(sender):
-        # 1. 获取发送者（Architect）最后收发的消息
-        # 在 GroupChatManager 转发时，last_message(recipient) 是最准确的
+    def task_trigger_condition(sender, messages=None):
+        # 1. 检查最新消息的内容
         try:
-            # 尝试获取最后一条消息的内容
-            last_msg_content = sender.last_message().get("content", "")
-            return "TODO" in last_msg_content
-        except Exception:
-            # 如果存在多个对话导致异常，备选方案：从消息历史列表判断
+            if messages and len(messages) > 0:
+                # 如果提供了messages参数，使用最新消息
+                last_msg_content = messages[-1].get("content", "")
+                return "TRIGGER_IMPLEMENTATION" in last_msg_content
+            else:
+                # 如果没有messages参数，尝试从sender获取最后一条消息
+                last_msg_content = sender.last_message().get("content", "")
+                return "TRIGGER_IMPLEMENTATION" in last_msg_content
+        except Exception as e:
+            # 如果发生任何异常，返回False
             return False
 
 
@@ -270,7 +278,7 @@ def setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_
             {
                 "recipient": implementation_manager,
                 "message": prepare_task_message,
-                "summary_method": "reflection_with_llm",
+                "summary_method": "last_msg",
             }
         ],
         trigger=task_trigger_condition
