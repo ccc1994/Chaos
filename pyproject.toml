@@ -21,6 +21,13 @@ dependencies = [
     "arize-phoenix>=12.15.1",
     "openinference-instrumentation-openai>=0.1.41",
     "openinference-instrumentation-autogen>=0.1.10",
+    "llama-index>=0.10.68",
+    "llama-index-llms-openai>=0.1.27",
+    "llama-index-embeddings-openai>=0.1.11",
+    "llama-index-readers-file>=0.1.33",
+    "llama-index-vector-stores-chroma>=0.1.10",
+    "tree-sitter>=0.23.2",
+    "tree-sitter-python>=0.23.6",
 ]
 
 [tool.setuptools.packages.find]
