@@ -24,11 +24,11 @@ def setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_
             if messages and len(messages) > 0:
                 # 如果提供了messages参数，使用最新消息
                 last_msg_content = messages[-1].get("content", "")
-                return "TRIGGER_IMPLEMENTATION" in last_msg_content
+                return "TODO:" in last_msg_content
             else:
                 # 如果没有messages参数，尝试从sender获取最后一条消息
                 last_msg_content = sender.last_message().get("content", "")
-                return "TRIGGER_IMPLEMENTATION" in last_msg_content
+                return "TODO:" in last_msg_content
         except Exception as e:
             # 如果发生任何异常，返回False
             return False
