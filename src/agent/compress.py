@@ -1,5 +1,6 @@
 from autogen.agentchat.contrib.capabilities.transforms import MessageTransform
-from typing import Any 
+from typing import Any
+from opentelemetry import trace 
 
 
 class LLMTextCompressor:
@@ -29,10 +30,10 @@ class LLMTextCompressor:
         """
         try:
             from openai import OpenAI
-            print(f"开始压缩文本，目标 token 数：{target_token}")
             
             # 获取压缩参数
             target_token = kwargs.get("target_token", 500)
+            print(f"开始压缩文本，目标 token 数：{target_token}")
             compression_prompt = kwargs.get("compression_prompt", "你是一个专业的文本压缩专家。请将以下文本压缩到约 {target_token} 个token，保留核心信息、关键细节和重要结论。")
             
             # 获取 LLM 配置
@@ -44,11 +45,12 @@ class LLMTextCompressor:
             config = config_list[0]
             
             # 构建 OpenAI 客户端
-            client = OpenAI(
-                api_key=config.get("api_key"),
-                base_url=config.get("base_url"),
-                api_type=config.get("api_type", "openai")
-            )
+            client_params = {
+                "api_key": config.get("api_key"),
+                "base_url": config.get("base_url")
+            }
+            # api_type 参数在新版本 OpenAI 客户端中不再支持
+            client = OpenAI(**client_params)
             
             # 构建压缩请求
             system_prompt = compression_prompt.format(target_token=target_token)
@@ -154,47 +156,103 @@ class LLMMessagesCompressor(MessageTransform):
         if not messages:
             return messages
         
-        # 1. 计算当前消息的总 token 数
-        # 如果有缓存的压缩消息，计算方式是：压缩消息的 token 数 + 未压缩消息的 token 数
-        if self._compression_cache["compressed_message"] is not None:
-            # 复用缓存
-            # 未压缩的消息是从上次压缩的位置到最新消息中除了最近几轮的部分
-            uncompressed_start_index = self._compression_cache["compressed_up_to_index"]
-            uncompressed_end_index = len(messages) - self.recent_rounds
+        # 获取tracer
+        tracer = trace.get_tracer(__name__)
+        
+        # 开始压缩span
+        with tracer.start_as_current_span("llm_context_compression") as span:
+            # 添加压缩前的属性
+            span.set_attribute("messages.original_count", len(messages))
+            span.set_attribute("messages.original_tokens", self._count_total_tokens(messages))
+            span.set_attribute("compression.max_tokens", self.max_tokens)
+            span.set_attribute("compression.recent_rounds", self.recent_rounds)
+            span.set_attribute("compression.target_token", self.target_token)
+            span.set_attribute("compression.use_cache", self._compression_cache["compressed_message"] is not None)
             
-            # 计算未压缩消息的 token 数
-            if uncompressed_start_index < uncompressed_end_index:
-                uncompressed_messages = messages[uncompressed_start_index:uncompressed_end_index]
-                uncompressed_token_count = self._count_total_tokens(uncompressed_messages)
-            else:
-                uncompressed_token_count = 0
-            
-            # 计算最近几轮消息的 token 数
-            recent_messages = messages[-self.recent_rounds:]
-            recent_token_count = self._count_total_tokens(recent_messages)
-            
-            # 总 token 数 = 压缩消息的 token 数 + 未压缩消息的 token 数 + 最近几轮消息的 token 数
-            total_token_count = self._compression_cache["compressed_token_count"] + uncompressed_token_count + recent_token_count
-            
-            # 如果总 token 数未超过阈值，直接返回原始消息
-            if total_token_count <= self.max_tokens:
-                return messages
-            
-            # 需要压缩，计算需要压缩的消息范围
-            # 新的需要压缩的消息是从上次压缩的位置到最新消息中除了最近几轮的部分
-            messages_to_compress = messages[uncompressed_start_index:uncompressed_end_index]
-            
-            if messages_to_compress:
-                # 如果有新的需要压缩的消息，将新消息与缓存中的压缩消息合并后再次压缩
-                # 先将缓存中的压缩消息转换为可读文本
-                compressed_content = self._compression_cache["compressed_message"].get("content", "")
-                # 移除可能的标记
-                if "[历史对话摘要]: " in compressed_content:
-                    compressed_content = compressed_content.replace("[历史对话摘要]: ", "")
+            # 1. 计算当前消息的总 token 数
+            # 如果有缓存的压缩消息，计算方式是：压缩消息的 token 数 + 未压缩消息的 token 数
+            if self._compression_cache["compressed_message"] is not None:
+                # 复用缓存
+                # 未压缩的消息是从上次压缩的位置到最新消息中除了最近几轮的部分
+                uncompressed_start_index = self._compression_cache["compressed_up_to_index"]
+                uncompressed_end_index = len(messages) - self.recent_rounds
                 
-                # 构建需要再次压缩的文本
-                text_to_compress = compressed_content + "\n"
-                text_to_compress += "\n".join([
+                # 计算未压缩消息的 token 数
+                if uncompressed_start_index < uncompressed_end_index:
+                    uncompressed_messages = messages[uncompressed_start_index:uncompressed_end_index]
+                    uncompressed_token_count = self._count_total_tokens(uncompressed_messages)
+                else:
+                    uncompressed_token_count = 0
+                
+                # 计算最近几轮消息的 token 数
+                recent_messages = messages[-self.recent_rounds:]
+                recent_token_count = self._count_total_tokens(recent_messages)
+                
+                # 总 token 数 = 压缩消息的 token 数 + 未压缩消息的 token 数 + 最近几轮消息的 token 数
+                total_token_count = self._compression_cache["compressed_token_count"] + uncompressed_token_count + recent_token_count
+                
+                # 如果总 token 数未超过阈值，直接返回原始消息
+                if total_token_count <= self.max_tokens:
+                    span.set_attribute("compression.applied", False)
+                    return messages
+                
+                # 需要压缩，计算需要压缩的消息范围
+                # 新的需要压缩的消息是从上次压缩的位置到最新消息中除了最近几轮的部分
+                messages_to_compress = messages[uncompressed_start_index:uncompressed_end_index]
+                
+                if messages_to_compress:
+                    # 如果有新的需要压缩的消息，将新消息与缓存中的压缩消息合并后再次压缩
+                    # 先将缓存中的压缩消息转换为可读文本
+                    compressed_content = self._compression_cache["compressed_message"].get("content", "")
+                    # 移除可能的标记
+                    if "[历史对话摘要]: " in compressed_content:
+                        compressed_content = compressed_content.replace("[历史对话摘要]: ", "")
+                    
+                    # 构建需要再次压缩的文本
+                    text_to_compress = compressed_content + "\n"
+                    text_to_compress += "\n".join([
+                        f"[{msg.get('role', 'unknown')}]: {msg.get('content', '')}"
+                        for msg in messages_to_compress
+                    ])
+                    
+                    # 调用 LLM 压缩
+                    compressed_text = self.llm_compressor.compress(
+                        text=text_to_compress,
+                        target_token=self.target_token,
+                        compression_prompt=self.compression_prompt
+                    )
+                    
+                    # 更新缓存
+                    self._compression_cache["compressed_message"] = {
+                        "role": "system",
+                        "content": f"[历史对话摘要]: {compressed_text}",
+                        "name": "compressed_history"
+                    }
+                    self._compression_cache["compressed_up_to_index"] = uncompressed_end_index
+                    self._compression_cache["compressed_token_count"] = self._count_tokens(
+                        self._compression_cache["compressed_message"]
+                    )
+            else:
+                # 没有缓存，计算所有消息的 token 数
+                total_token_count = self._count_total_tokens(messages)
+                
+                # 如果总 token 数未超过阈值，直接返回原始消息
+                if total_token_count <= self.max_tokens:
+                    span.set_attribute("compression.applied", False)
+                    return messages
+                
+                # 需要压缩，计算需要压缩的消息范围
+                if len(messages) <= self.recent_rounds:
+                    # 消息数量不足，无法压缩（需要保留所有消息）
+                    span.set_attribute("compression.applied", False)
+                    return messages
+                
+                # 压缩的消息是：所有消息中除了最近几轮的消息
+                messages_to_compress = messages[:-self.recent_rounds]
+                recent_messages = messages[-self.recent_rounds:]
+                
+                # 构建需要压缩的文本
+                text_to_compress = "\n".join([
                     f"[{msg.get('role', 'unknown')}]: {msg.get('content', '')}"
                     for msg in messages_to_compress
                 ])
@@ -206,66 +264,37 @@ class LLMMessagesCompressor(MessageTransform):
                     compression_prompt=self.compression_prompt
                 )
                 
-                # 更新缓存
-                self._compression_cache["compressed_message"] = {
+                # 创建压缩后的消息
+                compressed_message = {
                     "role": "system",
                     "content": f"[历史对话摘要]: {compressed_text}",
                     "name": "compressed_history"
                 }
-                self._compression_cache["compressed_up_to_index"] = uncompressed_end_index
-                self._compression_cache["compressed_token_count"] = self._count_tokens(
-                    self._compression_cache["compressed_message"]
-                )
-        else:
-            # 没有缓存，计算所有消息的 token 数
-            total_token_count = self._count_total_tokens(messages)
-            
-            # 如果总 token 数未超过阈值，直接返回原始消息
-            if total_token_count <= self.max_tokens:
-                return messages
-            
-            # 需要压缩，计算需要压缩的消息范围
-            if len(messages) <= self.recent_rounds:
-                # 消息数量不足，无法压缩（需要保留所有消息）
-                return messages
-            
-            # 压缩的消息是：所有消息中除了最近几轮的消息
-            messages_to_compress = messages[:-self.recent_rounds]
-            recent_messages = messages[-self.recent_rounds:]
-            
-            # 构建需要压缩的文本
-            text_to_compress = "\n".join([
-                f"[{msg.get('role', 'unknown')}]: {msg.get('content', '')}"
-                for msg in messages_to_compress
-            ])
-            
-            # 调用 LLM 压缩
-            compressed_text = self.llm_compressor.compress(
-                text=text_to_compress,
-                target_token=self.target_token,
-                compression_prompt=self.compression_prompt
-            )
-            
-            # 创建压缩后的消息
-            compressed_message = {
-                "role": "system",
-                "content": f"[历史对话摘要]: {compressed_text}",
-                "name": "compressed_history"
-            }
 
-            # 更新缓存
-            self._compression_cache["compressed_message"] = compressed_message
-            self._compression_cache["compressed_up_to_index"] = len(messages) - self.recent_rounds
-            self._compression_cache["compressed_token_count"] = self._count_tokens(compressed_message)
-        
-        # 构建最终的消息列表
-        # 如果有压缩消息，将其与未压缩的最近消息组合
-        if self._compression_cache["compressed_message"] is not None:
-            recent_messages = messages[-self.recent_rounds:]
-            return [self._compression_cache["compressed_message"]] + recent_messages
-        
-        # 其他情况，返回原始消息
-        return messages
+                # 更新缓存
+                self._compression_cache["compressed_message"] = compressed_message
+                self._compression_cache["compressed_up_to_index"] = len(messages) - self.recent_rounds
+                self._compression_cache["compressed_token_count"] = self._count_tokens(compressed_message)
+            
+            # 构建最终的消息列表
+            # 如果有压缩消息，将其与未压缩的最近消息组合
+            if self._compression_cache["compressed_message"] is not None:
+                recent_messages = messages[-self.recent_rounds:]
+                compressed_result = [self._compression_cache["compressed_message"]] + recent_messages
+            else:
+                # 其他情况，返回原始消息
+                compressed_result = messages
+            
+            # 添加压缩后的属性
+            span.set_attribute("messages.compressed_count", len(compressed_result))
+            span.set_attribute("messages.compressed_tokens", self._count_total_tokens(compressed_result))
+            span.set_attribute("compression.saved_tokens", self._count_total_tokens(messages) - self._count_total_tokens(compressed_result))
+            span.set_attribute("compression.compressed", True)
+            span.set_attribute("compression.compression_ratio", 
+                              ((self._count_total_tokens(messages) - self._count_total_tokens(compressed_result)) / 
+                               self._count_total_tokens(messages)) * 100 if self._count_total_tokens(messages) > 0 else 0)
+            
+            return compressed_result
 
     def get_logs(
         self, pre_transform_messages: list[dict[str, Any]], post_transform_messages: list[dict[str, Any]]
