@@ -6,31 +6,27 @@ import sys
 from dotenv import load_dotenv
 from rich.console import Console
 from rich.panel import Panel
-from rich.markdown import Markdown
-from rich.prompt import Prompt
 import logging
 
-try:
-    import readline
-except ImportError:
-    pass
 
 from src.agent.manager import ensure_project_setup
 from src.agent.agents import create_agents
 from src.agent.orchestrator import setup_orchestration, start_multi_agent_session
 from src.agent.context import get_level1_context
 
-import phoenix as px
 from openinference.instrumentation.autogen import AutogenInstrumentor
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.resources import Resource
+from openinference.instrumentation.openai import OpenAIInstrumentor
+
 
 console = Console()
 
 def main():
+    print("开始启动")
     # 1. 初始化
     load_dotenv()
 
@@ -44,8 +40,8 @@ def main():
         BatchSpanProcessor(OTLPSpanExporter(endpoint=endpoint))
     )
     trace.set_tracer_provider(tracer_provider)
+    OpenAIInstrumentor().instrument(tracer_provider=tracer_provider)
     AutogenInstrumentor().instrument()
-
     print("✅ Phoenix 可观测性已启动，正在监听 AutoGen 任务...")
     project_root =os.getcwd()
     # todo 没必要?
