@@ -8,7 +8,8 @@ from dotenv import load_dotenv
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
-from rich.color import Color
+from rich import box
+from rich.padding import Padding
 from prompt_toolkit import prompt
 from prompt_toolkit.key_binding import KeyBindings
 
@@ -24,6 +25,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.resources import Resource
 from openinference.instrumentation.openai import OpenAIInstrumentor
+from src.cli.banner import print_banner
 
 
 console = Console()
@@ -110,47 +112,7 @@ def get_advanced_input():
 
     return prompt("> ", key_bindings=kb, multiline=True)
 
-def print_banner():
-    # 1. 生成艺术字
-    f = pyfiglet.Figlet(font='slant')
-    chaos_text = f.renderText('CHAOS')
-    # 过滤空行并确保内容存在
-    lines = [line for line in chaos_text.splitlines() if line.strip()]
 
-    if not lines:
-        return
-
-    # 2. 创建渐变色
-    gradient_text = Text()
-    num_lines = len(lines)
-
-    for i, line in enumerate(lines):
-        # 线性插值计算颜色 (紫色 -> 青色)
-        ratio = i / (num_lines - 1) if num_lines > 1 else 0
-        r = int(138 + (0 - 138) * ratio)
-        g = int(43 + (255 - 43) * ratio)
-        b = int(226 + (255 - 226) * ratio)
-        
-        # 应用颜色
-        gradient_text.append(line + "\n", style=f"bold rgb({r},{g},{b})")
-
-    banner_panel = Panel.fit(
-        gradient_text,
-        border_style="bright_blue",
-        padding=(1, 5),
-        title="[bold white]v0.0.1[/]", 
-        title_align="right",
-        subtitle="[italic grey50]Powered By AutoGen & LlamaIndex[/]", 
-        subtitle_align="center"
-    )
-
-    # 4. 打印展示
-    console.print(banner_panel)
-    
-    # 辅助提示
-    console.print(
-        "\n[yellow]➜[/][white] 输入 [bold]'exit'[/] 退出 | [bold]Alt+Enter[/] 换行 | [bold]Enter[/] 提交[/]\n"
-    )
 
 if __name__ == "__main__":
     main()
