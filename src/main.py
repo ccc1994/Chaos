@@ -26,6 +26,7 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExport
 from opentelemetry.sdk.resources import Resource
 from openinference.instrumentation.openai import OpenAIInstrumentor
 from src.cli.banner import print_banner
+from src.patch_autogen import patch_autogen_instrumentation
 
 
 console = Console()
@@ -45,6 +46,7 @@ def main():
     )
     trace.set_tracer_provider(tracer_provider)
     OpenAIInstrumentor().instrument(tracer_provider=tracer_provider)
+    patch_autogen_instrumentation() # Apply the patch
     AutogenInstrumentor().instrument()
     project_root =os.getcwd()
     # todo 没必要?
