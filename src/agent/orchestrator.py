@@ -40,7 +40,7 @@ def setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_
             {
                 "recipient": implementation_manager,
                 "message": prepare_task_message,
-                "summary_method": "last_msg",
+                "summary_method": "reflection_with_llm",
             }
         ],
         trigger=task_trigger_condition
@@ -61,7 +61,7 @@ def setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_
 
     architectCompressor = LLMMessagesCompressor(
         llm_config=manager_config,
-        max_tokens=10000,  
+        max_tokens=100000,  
         keep_first_n=1,  
         recent_rounds=2,  
         compression_prompt="""你是一个专业的大模型对话压缩专家, 下面是 architect 正在调研项目或者是正在推进开发计划。请将以下对话压缩到约 {target_token} 个token。
@@ -83,41 +83,54 @@ def setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_
     return architect
 
 def setup_implementation_group_chat(coder, reviewer, tester, user_proxy, manager_config):
-
-    # --- 1. 关键优化：剥离 Manager 的工具权限 ---
-    # 深度拷贝配置，并清空 tools/functions，防止 Manager 尝试“亲自下场”干活
+    
+    # --- 1. 剥离 Manager 工具权限 (保持不变) ---
     selector_config = copy.deepcopy(manager_config)
-    if "tools" in selector_config:
-        print("remove tools", selector_config["tools"])
-        del selector_config["tools"]
-    if "functions" in selector_config:
-        print("remove functions", selector_config["tools"])
-        del selector_config["functions"]
+    selector_config.pop("tools", None)
+    selector_config.pop("functions", None)
 
     # --- 2. 状态机定义 ---
     implementation_graph_dict = {
-        coder: [reviewer],
-        reviewer: [coder, tester],
-        tester: [coder],
+        coder: [reviewer, coder],
+        reviewer: [coder, tester, reviewer],
+        tester: [coder, tester],
     }
 
-    # --- 3. 增强的选择指令 ---
+  # --- 3. 增强的选择指令 ---
     # 定义选择时的系统引导词，防止它输出“我需要使用工具...”这种废话
     select_speaker_prompt = (
         "You are the orchestration manager. Your ONLY job is to look at the conversation "
         "and select the next role from the list. \n"
         "Rules:\n"
         "1. If code is written, select Reviewer to check.\n"
-        "2. If Reviewer found bugs, select Coder to fix.\n"
+        "2. If Reviewer found bugs or errors, select Coder to fix.\n"
         "3. If Reviewer passed, select Tester.\n"
         "4. ONLY return the name of the next agent. DO NOT perform any tasks yourself."
     )
 
+    def custom_speaker_selection(last_speaker, groupchat):
+        """
+        这个函数会在每一轮决定下一个是谁。
+        """
+        messages = groupchat.messages
+        if not messages or len(messages) == 1:
+            return coder # 初始发言者
+
+        last_msg = messages[-1]
+
+        # 检查点：如果上一条消息发起了工具调用
+        if last_msg["role"] == "tool":
+            return last_speaker
+
+        # 如果没有工具调用，则使用传统的 'auto' 逻辑 (即让 Manager LLM 决定)
+        return "auto"
+
+    # --- 4. 构建 GroupChat ---
     implementation_groupchat = GroupChat(
         agents=[coder, reviewer, tester],
         messages=[],
         max_round=50,
-        speaker_selection_method="auto", 
+        speaker_selection_method=custom_speaker_selection, 
         allowed_or_disallowed_speaker_transitions=implementation_graph_dict,
         speaker_transitions_type="allowed",
         select_speaker_prompt_template=select_speaker_prompt 

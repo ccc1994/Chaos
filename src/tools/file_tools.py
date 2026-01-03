@@ -37,23 +37,55 @@ def insert_code(path: str, line_number: int, content: str) -> str:
     return f"代码已成功插入到 '{path}' 的第 {line_number} 行。"
 insert_code.tool_type = "write"  # 添加工具类型标识
 
-def search_code(query: str, path: str = ".") -> str:
-    """在文件中搜索特定模式。（第三级上下文）"""
+def search_code(query: str, path: str = ".", max_matches: int = 50) -> str:
+    """
+    在文件中搜索特定模式。
+    Args:
+        query: 搜索关键词
+        path: 搜索路径
+        max_matches: 最大返回匹配数，防止上下文溢出
+    """
     results = []
-    for root, dirs, files in os.walk(path):
-        if any(x in root for x in [".git", ".ca", "node_modules", "__pycache__"]):
-            continue
+    matches_count = 0
+    # 定义要忽略的目录和文件后缀（可以根据项目调整）
+    ignore_dirs = {".git", ".idea", ".vscode", "__pycache__", "node_modules", "dist", "build", "venv"}
+    ignore_exts = {".exe", ".dll", ".so", ".bin", ".jpg", ".png", ".zip", ".pyc"}
+    
+    # 遍历文件
+    for root, dirs, files in os.walk(path, topdown=True):
+        # 1. 剪枝：原地修改 dirs 列表，阻止 os.walk 进入这些目录，提高搜索速度
+        dirs[:] = [d for d in dirs if d not in ignore_dirs]
+        
         for file in files:
-            file_path = os.path.join(root, file)
-            try:
-                with open(file_path, "r", encoding="utf-8") as f:
-                    for i, line in enumerate(f, 1):
-                        if query in line:
-                            results.append(f"{file_path}:{i}: {line.strip()}")
-            except (UnicodeDecodeError, PermissionError):
+            # 2. 过滤非文本文件后缀
+            if any(file.endswith(ext) for ext in ignore_exts):
                 continue
+                
+            file_path = os.path.join(root, file)
+            
+            try:
+                # 3. 设置文件读取大小限制或行长度检查
+                with open(file_path, "r", encoding="utf-8", errors='ignore') as f:
+                    for i, line in enumerate(f, 1):
+                        # 4. 过滤超长行（通常是压缩代码或数据文件）
+                        if len(line) > 500: 
+                            continue
+                            
+                        if query in line:
+                            matches_count += 1
+                            results.append(f"{file_path}:{i}: {line.strip()}")
+                            
+                            # 5. 硬中断：如果达到最大匹配数，立即停止
+                            if matches_count >= max_matches:
+                                results.append(f"\n[系统提示] 搜索结果过多，已截断。仅显示前 {max_matches} 条。请尝试更精确的关键词或指定具体目录。")
+                                return "\n".join(results)
+                                
+            except (PermissionError, OSError):
+                continue
+
     return "\n".join(results) if results else "未找到匹配项。"
-search_code.tool_type = "read"  # 添加工具类型标识
+
+search_code.tool_type = "read"
 
 def edit_block(path: str, pattern: str, replacement: str, is_regex: bool = False) -> str:
     """

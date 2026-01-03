@@ -161,7 +161,7 @@ class LLMMessagesCompressor(MessageTransform):
         if not messages:
             return messages
             
-        print(f"[{getattr(self, 'agent_name', 'Agent')}] 检查上下文压缩...")
+        # print(f"[{getattr(self, 'agent_name', 'Agent')}] 检查上下文压缩...")
         
         # 1. 计算当前消息的总 token 数
         # 如果有缓存的压缩消息，计算方式是：压缩消息的 token 数 + 未压缩消息的 token 数
@@ -195,10 +195,10 @@ class LLMMessagesCompressor(MessageTransform):
             
             # 如果总 token 数未超过阈值，直接返回原始消息
             if total_token_count <= self.max_tokens:
-                print(f"  - [{self.agent_name}] 当前 token 数: {total_token_count} (阈值: {self.max_tokens}) -> 跳过压缩")
+                # print(f"  - [{self.agent_name}] 当前 token 数: {total_token_count} (阈值: {self.max_tokens}) -> 跳过压缩")
                 return messages
             
-            print(f"  - [{self.agent_name}] 当前 token 数: {total_token_count} (阈值: {self.max_tokens}) -> 触发压缩!")
+            # print(f"  - [{self.agent_name}] 当前 token 数: {total_token_count} (阈值: {self.max_tokens}) -> 触发压缩!")
             
             # 需要压缩，计算需要压缩的消息范围
             # 新的需要压缩的消息是从上次压缩的位置到最新消息中除了最近几轮的部分
@@ -274,10 +274,10 @@ class LLMMessagesCompressor(MessageTransform):
             
             # 如果总 token 数未超过阈值，直接返回原始消息
             if total_token_count <= self.max_tokens:
-                print(f"  - [{self.agent_name}] 当前 token 数: {total_token_count} (阈值: {self.max_tokens}) -> 跳过压缩")
+                # print(f"  - [{self.agent_name}] 当前 token 数: {total_token_count} (阈值: {self.max_tokens}) -> 跳过压缩")
                 return messages
             
-            print(f"  - [{self.agent_name}] 当前 token 数: {total_token_count} (阈值: {self.max_tokens}) -> 触发压缩!")
+            # print(f"  - [{self.agent_name}] 当前 token 数: {total_token_count} (阈值: {self.max_tokens}) -> 触发压缩!")
             
             # 需要压缩，计算需要压缩的消息范围
             if len(messages) <= self.recent_rounds:

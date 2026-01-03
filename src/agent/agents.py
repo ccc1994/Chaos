@@ -133,6 +133,20 @@ def create_agents(api_key: str, base_url: str):
                 name=tool.__name__,
                 description=tool.__doc__
             )
+            register_function(
+                tool,
+                caller=reviewer,
+                executor=reviewer, 
+                name=tool.__name__,
+                description=tool.__doc__
+            )
+            register_function(
+                tool,
+                caller=tester,
+                executor=tester, 
+                name=tool.__name__,
+                description=tool.__doc__
+            )
 
         # 2. 为 Coder 注册 Shell 工具（用于运行构建、测试等命令）
         for tool in get_shell_tools():
