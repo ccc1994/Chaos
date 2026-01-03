@@ -15,9 +15,14 @@ def test_standalone_index():
     print(f"--- 正在对项目根目录进行索引: {project_root} ---")
     
     # 2. 同步构建索引
-    # 注意：build_index 会检查 .ca/chroma_db，如果已存在则加载
     build_index(project_root)
     
+    # 验证索引是否构建成功
+    from src.tools.index_tools import _index
+    if _index is None:
+        print("\n[错误] 索引构建失败，请检查上方日志。")
+        sys.exit(1)
+        
     print("\n--- 索引构建/加载完成 ---")
     
     # 3. 进行搜索测试

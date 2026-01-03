@@ -999,7 +999,7 @@ wheels = [
 
 [[package]]
 name = "chromadb"
-version = "0.5.23"
+version = "0.5.20"
 source = { registry = "https://bytedpypi.byted.org/simple" }
 resolution-markers = [
     "python_full_version < '3.10' and sys_platform == 'win32'",
@@ -1029,15 +1029,15 @@ dependencies = [
     { name = "pyyaml", marker = "python_full_version < '3.10'" },
     { name = "rich", marker = "python_full_version < '3.10'" },
     { name = "tenacity", version = "8.5.0", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "tokenizers", version = "0.20.3", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "tokenizers", marker = "python_full_version < '3.10'" },
     { name = "tqdm", marker = "python_full_version < '3.10'" },
     { name = "typer", marker = "python_full_version < '3.10'" },
     { name = "typing-extensions", marker = "python_full_version < '3.10'" },
     { name = "uvicorn", version = "0.39.0", source = { registry = "https://bytedpypi.byted.org/simple" }, extra = ["standard"], marker = "python_full_version < '3.10'" },
 ]
-sdist = { url = "https://bytedpypi.byted.org/packages/chromadb/chromadb-0.5.23.tar.gz", hash = "sha256:360a12b9795c5a33cb1f839d14410ccbde662ef1accd36153b0ae22312edabd1" }
+sdist = { url = "https://bytedpypi.byted.org/packages/chromadb/chromadb-0.5.20.tar.gz", hash = "sha256:19513a23b2d20059866216bfd80195d1d4a160ffba234b8899f5e80978160ca7" }
 wheels = [
-    { url = "https://bytedpypi.byted.org/packages/chromadb/chromadb-0.5.23-py3-none-any.whl", hash = "sha256:ffe5bdd7276d12cb682df0d38a13aa37573e6a3678e71889ac45f539ae05ad7e" },
+    { url = "https://bytedpypi.byted.org/packages/chromadb/chromadb-0.5.20-py3-none-any.whl", hash = "sha256:9550ba1b6dce911e35cac2568b301badf4b42f457b99a432bdeec2b6b9dd3680" },
 ]
 
 [[package]]
@@ -1078,7 +1078,7 @@ dependencies = [
     { name = "pyyaml", marker = "python_full_version >= '3.10'" },
     { name = "rich", marker = "python_full_version >= '3.10'" },
     { name = "tenacity", version = "9.1.2", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "tokenizers", version = "0.22.1", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "tokenizers", marker = "python_full_version >= '3.10'" },
     { name = "tqdm", marker = "python_full_version >= '3.10'" },
     { name = "typer", marker = "python_full_version >= '3.10'" },
     { name = "typing-extensions", marker = "python_full_version >= '3.10'" },
@@ -1143,10 +1143,14 @@ dependencies = [
     { name = "autogen", version = "0.10.3", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "llama-index", version = "0.10.68", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "llama-index", version = "0.14.12", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "llama-index-core", version = "0.10.68.post1", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "llama-index-core", version = "0.14.12", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "llama-index-embeddings-openai", version = "0.1.11", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "llama-index-embeddings-openai", version = "0.5.1", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "llama-index-llms-openai", version = "0.1.27", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "llama-index-llms-openai", version = "0.6.12", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "llama-index-llms-openai-like", version = "0.1.3", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "llama-index-llms-openai-like", version = "0.5.3", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "llama-index-readers-file", version = "0.1.33", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "llama-index-readers-file", version = "0.5.6", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "llama-index-vector-stores-chroma", version = "0.1.10", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
@@ -1164,6 +1168,7 @@ dependencies = [
     { name = "rich" },
     { name = "tree-sitter", version = "0.23.2", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "tree-sitter", version = "0.25.2", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "tree-sitter-languages" },
     { name = "tree-sitter-python", version = "0.23.6", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "tree-sitter-python", version = "0.25.0", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "volcengine-python-sdk" },
@@ -1175,8 +1180,10 @@ requires-dist = [
     { name = "arize-phoenix-otel", specifier = ">=0.14.0" },
     { name = "autogen", specifier = ">=0.9.7" },
     { name = "llama-index", specifier = ">=0.10.68" },
+    { name = "llama-index-core" },
     { name = "llama-index-embeddings-openai", specifier = ">=0.1.11" },
     { name = "llama-index-llms-openai", specifier = ">=0.1.27" },
+    { name = "llama-index-llms-openai-like", specifier = ">=0.1.3" },
     { name = "llama-index-readers-file", specifier = ">=0.1.33" },
     { name = "llama-index-vector-stores-chroma", specifier = ">=0.1.10" },
     { name = "openai", specifier = ">=2.14.0" },
@@ -1190,6 +1197,7 @@ requires-dist = [
     { name = "requests" },
     { name = "rich" },
     { name = "tree-sitter", specifier = ">=0.23.2" },
+    { name = "tree-sitter-languages", specifier = ">=1.10.2" },
     { name = "tree-sitter-python", specifier = ">=0.23.6" },
     { name = "volcengine-python-sdk" },
 ]
@@ -2063,54 +2071,21 @@ wheels = [
 name = "huggingface-hub"
 version = "0.36.0"
 source = { registry = "https://bytedpypi.byted.org/simple" }
-resolution-markers = [
-    "python_full_version < '3.10' and sys_platform == 'win32'",
-    "python_full_version < '3.10' and sys_platform != 'win32'",
-]
 dependencies = [
     { name = "filelock", version = "3.19.1", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "filelock", version = "3.20.1", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "fsspec", version = "2025.10.0", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "hf-xet", marker = "(python_full_version < '3.10' and platform_machine == 'aarch64') or (python_full_version < '3.10' and platform_machine == 'amd64') or (python_full_version < '3.10' and platform_machine == 'arm64') or (python_full_version < '3.10' and platform_machine == 'x86_64')" },
-    { name = "packaging", marker = "python_full_version < '3.10'" },
-    { name = "pyyaml", marker = "python_full_version < '3.10'" },
-    { name = "requests", marker = "python_full_version < '3.10'" },
-    { name = "tqdm", marker = "python_full_version < '3.10'" },
-    { name = "typing-extensions", marker = "python_full_version < '3.10'" },
+    { name = "fsspec", version = "2025.12.0", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "hf-xet", marker = "platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64'" },
+    { name = "packaging" },
+    { name = "pyyaml" },
+    { name = "requests" },
+    { name = "tqdm" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://bytedpypi.byted.org/packages/huggingface-hub/huggingface_hub-0.36.0.tar.gz", hash = "sha256:47b3f0e2539c39bf5cde015d63b72ec49baff67b6931c3d97f3f84532e2b8d25" }
 wheels = [
     { url = "https://bytedpypi.byted.org/packages/huggingface-hub/huggingface_hub-0.36.0-py3-none-any.whl", hash = "sha256:7bcc9ad17d5b3f07b57c78e79d527102d08313caa278a641993acddcb894548d" },
-]
-
-[[package]]
-name = "huggingface-hub"
-version = "1.2.3"
-source = { registry = "https://bytedpypi.byted.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.13' and sys_platform == 'win32'",
-    "python_full_version == '3.12.*' and sys_platform == 'win32'",
-    "python_full_version == '3.11.*' and sys_platform == 'win32'",
-    "python_full_version == '3.10.*' and sys_platform == 'win32'",
-    "python_full_version >= '3.13' and sys_platform != 'win32'",
-    "python_full_version == '3.12.*' and sys_platform != 'win32'",
-    "python_full_version == '3.11.*' and sys_platform != 'win32'",
-    "python_full_version == '3.10.*' and sys_platform != 'win32'",
-]
-dependencies = [
-    { name = "filelock", version = "3.20.1", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "fsspec", version = "2025.12.0", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "hf-xet", marker = "(python_full_version >= '3.10' and platform_machine == 'AMD64') or (python_full_version >= '3.10' and platform_machine == 'aarch64') or (python_full_version >= '3.10' and platform_machine == 'amd64') or (python_full_version >= '3.10' and platform_machine == 'arm64') or (python_full_version >= '3.10' and platform_machine == 'x86_64')" },
-    { name = "httpx", marker = "python_full_version >= '3.10'" },
-    { name = "packaging", marker = "python_full_version >= '3.10'" },
-    { name = "pyyaml", marker = "python_full_version >= '3.10'" },
-    { name = "shellingham", marker = "python_full_version >= '3.10'" },
-    { name = "tqdm", marker = "python_full_version >= '3.10'" },
-    { name = "typer-slim", marker = "python_full_version >= '3.10'" },
-    { name = "typing-extensions", marker = "python_full_version >= '3.10'" },
-]
-sdist = { url = "https://bytedpypi.byted.org/packages/huggingface-hub/huggingface_hub-1.2.3.tar.gz", hash = "sha256:4ba57f17004fd27bb176a6b7107df579865d4cde015112db59184c51f5602ba7" }
-wheels = [
-    { url = "https://bytedpypi.byted.org/packages/huggingface-hub/huggingface_hub-1.2.3-py3-none-any.whl", hash = "sha256:c9b7a91a9eedaa2149cdc12bdd8f5a11780e10de1f1024718becf9e41e5a4642" },
 ]
 
 [[package]]
@@ -2784,6 +2759,48 @@ wheels = [
 ]
 
 [[package]]
+name = "llama-index-llms-openai-like"
+version = "0.1.3"
+source = { registry = "https://bytedpypi.byted.org/simple" }
+resolution-markers = [
+    "python_full_version < '3.10' and sys_platform == 'win32'",
+    "python_full_version < '3.10' and sys_platform != 'win32'",
+]
+dependencies = [
+    { name = "llama-index-core", version = "0.10.68.post1", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "llama-index-llms-openai", version = "0.1.27", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "transformers", marker = "python_full_version < '3.10'" },
+]
+sdist = { url = "https://bytedpypi.byted.org/packages/llama-index-llms-openai-like/llama_index_llms_openai_like-0.1.3.tar.gz", hash = "sha256:c3412325077c75263e37d60d501314b9bdc770f12d8a2b16e756e7d9ac8f9e3f" }
+wheels = [
+    { url = "https://bytedpypi.byted.org/packages/llama-index-llms-openai-like/llama_index_llms_openai_like-0.1.3-py3-none-any.whl", hash = "sha256:0cf2c56f027c5e1f17c7fc606ad2b991f61daa75a88ba35bb5ea97de9766d4d3" },
+]
+
+[[package]]
+name = "llama-index-llms-openai-like"
+version = "0.5.3"
+source = { registry = "https://bytedpypi.byted.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.13' and sys_platform == 'win32'",
+    "python_full_version == '3.12.*' and sys_platform == 'win32'",
+    "python_full_version == '3.11.*' and sys_platform == 'win32'",
+    "python_full_version == '3.10.*' and sys_platform == 'win32'",
+    "python_full_version >= '3.13' and sys_platform != 'win32'",
+    "python_full_version == '3.12.*' and sys_platform != 'win32'",
+    "python_full_version == '3.11.*' and sys_platform != 'win32'",
+    "python_full_version == '3.10.*' and sys_platform != 'win32'",
+]
+dependencies = [
+    { name = "llama-index-core", version = "0.14.12", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "llama-index-llms-openai", version = "0.6.12", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "transformers", marker = "python_full_version >= '3.10'" },
+]
+sdist = { url = "https://bytedpypi.byted.org/packages/llama-index-llms-openai-like/llama_index_llms_openai_like-0.5.3.tar.gz", hash = "sha256:84bdfc88bb5d9ea806bdd1be4b4378357781c0637c78c548242aac857f165090" }
+wheels = [
+    { url = "https://bytedpypi.byted.org/packages/llama-index-llms-openai-like/llama_index_llms_openai_like-0.5.3-py3-none-any.whl", hash = "sha256:9ef2374916427e1a21db0ea5f624056fb323e13308c6722b3de0384dfecd467b" },
+]
+
+[[package]]
 name = "llama-index-multi-modal-llms-openai"
 version = "0.1.9"
 source = { registry = "https://bytedpypi.byted.org/simple" }
@@ -2919,7 +2936,7 @@ resolution-markers = [
     "python_full_version < '3.10' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "chromadb", version = "0.5.23", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "chromadb", version = "0.5.20", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "llama-index-core", version = "0.10.68.post1", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
 ]
 sdist = { url = "https://bytedpypi.byted.org/packages/llama-index-vector-stores-chroma/llama_index_vector_stores_chroma-0.1.10.tar.gz", hash = "sha256:97971f7b36461ef37be023b9ceb5531396cc48360d0bdbda51cce1290301cc47" }
@@ -5825,6 +5842,36 @@ wheels = [
 ]
 
 [[package]]
+name = "safetensors"
+version = "0.7.0"
+source = { registry = "https://bytedpypi.byted.org/simple" }
+sdist = { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0.tar.gz", hash = "sha256:07663963b67e8bd9f0b8ad15bb9163606cd27cc5a1b96235a50d8369803b96b0" }
+wheels = [
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-macosx_10_12_x86_64.whl", hash = "sha256:c82f4d474cf725255d9e6acf17252991c3c8aac038d6ef363a4bf8be2f6db517" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:94fd4858284736bb67a897a41608b5b0c2496c9bdb3bf2af1fa3409127f20d57" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e07d91d0c92a31200f25351f4acb2bc6aff7f48094e13ebb1d0fb995b54b6542" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:8469155f4cb518bafb4acf4865e8bb9d6804110d2d9bdcaa78564b9fd841e104" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:54bef08bf00a2bff599982f6b08e8770e09cc012d7bba00783fc7ea38f1fb37d" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:42cb091236206bb2016d245c377ed383aa7f78691748f3bb6ee1bfa51ae2ce6a" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:dac7252938f0696ddea46f5e855dd3138444e82236e3be475f54929f0c510d48" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:1d060c70284127fa805085d8f10fbd0962792aed71879d00864acda69dbab981" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:cdab83a366799fa730f90a4ebb563e494f28e9e92c4819e556152ad55e43591b" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-musllinux_1_2_armv7l.whl", hash = "sha256:672132907fcad9f2aedcb705b2d7b3b93354a2aec1b2f706c4db852abe338f85" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-musllinux_1_2_i686.whl", hash = "sha256:5d72abdb8a4d56d4020713724ba81dac065fedb7f3667151c4a637f1d3fb26c0" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:b0f6d66c1c538d5a94a73aa9ddca8ccc4227e6c9ff555322ea40bdd142391dd4" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-win32.whl", hash = "sha256:c74af94bf3ac15ac4d0f2a7c7b4663a15f8c2ab15ed0fc7531ca61d0835eccba" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-cp38-abi3-win_amd64.whl", hash = "sha256:d1239932053f56f3456f32eb9625590cc7582e905021f94636202a864d470755" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-pp310-pypy310_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f4729811a6640d019a4b7ba8638ee2fd21fa5ca8c7e7bdf0fed62068fcaac737" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-pp310-pypy310_pp73-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:12f49080303fa6bb424b362149a12949dfbbf1e06811a88f2307276b0c131afd" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-pp310-pypy310_pp73-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:0071bffba4150c2f46cae1432d31995d77acfd9f8db598b5d1a2ce67e8440ad2" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-pp310-pypy310_pp73-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:473b32699f4200e69801bf5abf93f1a4ecd432a70984df164fc22ccf39c4a6f3" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-pp39-pypy39_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7b95a3fa7b3abb9b5b0e07668e808364d0d40f6bbbf9ae0faa8b5b210c97b140" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-pp39-pypy39_pp73-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:cfdead2f57330d76aa7234051dadfa7d4eedc0e5a27fd08e6f96714a92b00f09" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-pp39-pypy39_pp73-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:dc92bc2db7b45bda4510e4f51c59b00fe80b2d6be88928346e4294ce1c2abe7c" },
+    { url = "https://bytedpypi.byted.org/packages/safetensors/safetensors-0.7.0-pp39-pypy39_pp73-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:6999421eb8ba9df4450a16d9184fcb7bef26240b9f98e95401f17af6c2210b71" },
+]
+
+[[package]]
 name = "scikit-learn"
 version = "1.6.1"
 source = { registry = "https://bytedpypi.byted.org/simple" }
@@ -6550,109 +6597,10 @@ wheels = [
 
 [[package]]
 name = "tokenizers"
-version = "0.20.3"
-source = { registry = "https://bytedpypi.byted.org/simple" }
-resolution-markers = [
-    "python_full_version < '3.10' and sys_platform == 'win32'",
-    "python_full_version < '3.10' and sys_platform != 'win32'",
-]
-dependencies = [
-    { name = "huggingface-hub", version = "0.36.0", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
-]
-sdist = { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3.tar.gz", hash = "sha256:2278b34c5d0dd78e087e1ca7f9b1dcbf129d80211afa645f214bd6e051037539" }
-wheels = [
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp310-cp310-macosx_10_12_x86_64.whl", hash = "sha256:31ccab28dbb1a9fe539787210b0026e22debeab1662970f61c2d921f7557f7e4" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:c6361191f762bda98c773da418cf511cbaa0cb8d0a1196f16f8c0119bde68ff8" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f128d5da1202b78fa0a10d8d938610472487da01b57098d48f7e944384362514" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp310-cp310-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:79c4121a2e9433ad7ef0769b9ca1f7dd7fa4c0cd501763d0a030afcbc6384481" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp310-cp310-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:b7850fde24197fe5cd6556e2fdba53a6d3bae67c531ea33a3d7c420b90904141" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp310-cp310-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:b357970c095dc134978a68c67d845a1e3803ab7c4fbb39195bde914e7e13cf8b" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp310-cp310-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:a333d878c4970b72d6c07848b90c05f6b045cf9273fc2bc04a27211721ad6118" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1fd9fee817f655a8f50049f685e224828abfadd436b8ff67979fc1d054b435f1" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp310-cp310-musllinux_1_1_aarch64.whl", hash = "sha256:9e7816808b402129393a435ea2a509679b41246175d6e5e9f25b8692bfaa272b" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:ba96367db9d8a730d3a1d5996b4b7babb846c3994b8ef14008cd8660f55db59d" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp310-none-win32.whl", hash = "sha256:ee31ba9d7df6a98619426283e80c6359f167e2e9882d9ce1b0254937dbd32f3f" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp310-none-win_amd64.whl", hash = "sha256:a845c08fdad554fe0871d1255df85772f91236e5fd6b9287ef8b64f5807dbd0c" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp311-cp311-macosx_10_12_x86_64.whl", hash = "sha256:585b51e06ca1f4839ce7759941e66766d7b060dccfdc57c4ca1e5b9a33013a90" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:61cbf11954f3b481d08723ebd048ba4b11e582986f9be74d2c3bdd9293a4538d" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:ef820880d5e4e8484e2fa54ff8d297bb32519eaa7815694dc835ace9130a3eea" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp311-cp311-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:67ef4dcb8841a4988cd00dd288fb95dfc8e22ed021f01f37348fd51c2b055ba9" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp311-cp311-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ff1ef8bd47a02b0dc191688ccb4da53600df5d4c9a05a4b68e1e3de4823e78eb" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp311-cp311-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:444d188186eab3148baf0615b522461b41b1f0cd58cd57b862ec94b6ac9780f1" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp311-cp311-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:37c04c032c1442740b2c2d925f1857885c07619224a533123ac7ea71ca5713da" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:453c7769d22231960ee0e883d1005c93c68015025a5e4ae56275406d94a3c907" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp311-cp311-musllinux_1_1_aarch64.whl", hash = "sha256:4bb31f7b2847e439766aaa9cc7bccf7ac7088052deccdb2275c952d96f691c6a" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:843729bf0f991b29655a069a2ff58a4c24375a553c70955e15e37a90dd4e045c" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp311-none-win32.whl", hash = "sha256:efcce3a927b1e20ca694ba13f7a68c59b0bd859ef71e441db68ee42cf20c2442" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp311-none-win_amd64.whl", hash = "sha256:88301aa0801f225725b6df5dea3d77c80365ff2362ca7e252583f2b4809c4cc0" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp312-cp312-macosx_10_12_x86_64.whl", hash = "sha256:49d12a32e190fad0e79e5bdb788d05da2f20d8e006b13a70859ac47fecf6ab2f" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:282848cacfb9c06d5e51489f38ec5aa0b3cd1e247a023061945f71f41d949d73" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:abe4e08c7d0cd6154c795deb5bf81d2122f36daf075e0c12a8b050d824ef0a64" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp312-cp312-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:ca94fc1b73b3883c98f0c88c77700b13d55b49f1071dfd57df2b06f3ff7afd64" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp312-cp312-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ef279c7e239f95c8bdd6ff319d9870f30f0d24915b04895f55b1adcf96d6c60d" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:16384073973f6ccbde9852157a4fdfe632bb65208139c9d0c0bd0176a71fd67f" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:312d522caeb8a1a42ebdec87118d99b22667782b67898a76c963c058a7e41d4f" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f2b7cb962564785a83dafbba0144ecb7f579f1d57d8c406cdaa7f32fe32f18ad" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp312-cp312-musllinux_1_1_aarch64.whl", hash = "sha256:124c5882ebb88dadae1fc788a582299fcd3a8bd84fc3e260b9918cf28b8751f5" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:2b6e54e71f84c4202111a489879005cb14b92616a87417f6c102c833af961ea2" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp312-none-win32.whl", hash = "sha256:83d9bfbe9af86f2d9df4833c22e94d94750f1d0cd9bfb22a7bb90a86f61cdb1c" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp312-none-win_amd64.whl", hash = "sha256:44def74cee574d609a36e17c8914311d1b5dbcfe37c55fd29369d42591b91cf2" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp313-cp313-macosx_10_12_x86_64.whl", hash = "sha256:e0b630e0b536ef0e3c8b42c685c1bc93bd19e98c0f1543db52911f8ede42cf84" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:a02d160d2b19bcbfdf28bd9a4bf11be4cb97d0499c000d95d4c4b1a4312740b6" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:0e3d80d89b068bc30034034b5319218c7c0a91b00af19679833f55f3becb6945" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp313-cp313-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:174a54910bed1b089226512b4458ea60d6d6fd93060254734d3bc3540953c51c" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp313-cp313-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:098b8a632b8656aa5802c46689462c5c48f02510f24029d71c208ec2c822e771" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp313-cp313-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:78c8c143e3ae41e718588281eb3e212c2b31623c9d6d40410ec464d7d6221fb5" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp313-cp313-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:2b26b0aadb18cd8701077362ba359a06683662d5cafe3e8e8aba10eb05c037f1" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:07d7851a72717321022f3774e84aa9d595a041d643fafa2e87fbc9b18711dac0" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp313-cp313-musllinux_1_1_aarch64.whl", hash = "sha256:bd44e48a430ada902c6266a8245f5036c4fe744fcb51f699999fbe82aa438797" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp313-cp313-musllinux_1_1_x86_64.whl", hash = "sha256:a4c186bb006ccbe1f5cc4e0380d1ce7806f5955c244074fd96abc55e27b77f01" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp313-none-win32.whl", hash = "sha256:6e19e0f1d854d6ab7ea0c743d06e764d1d9a546932be0a67f33087645f00fe13" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp313-none-win_amd64.whl", hash = "sha256:d50ede425c7e60966a9680d41b58b3a0950afa1bb570488e2972fa61662c4273" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp39-cp39-macosx_10_12_x86_64.whl", hash = "sha256:93e37f0269a11dc3b1a953f1fca9707f0929ebf8b4063c591c71a0664219988e" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:f4cb0c614b0135e781de96c2af87e73da0389ac1458e2a97562ed26e29490d8d" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7eb2fb1c432f5746b22f8a7f09fc18c4156cb0031c77f53cb19379d82d43297a" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp39-cp39-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:bfa8d029bb156181b006643309d6b673615a24e4ed24cf03aa191d599b996f51" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp39-cp39-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:6f90549622de3bf476ad9f1dd6f3f952ec3ed6ab8615ae88ef060d0c5bfad55d" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp39-cp39-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:a1d469c74eebf5c43fd61cd9b030e271d17198edd7bd45392e03a3c091d7d6d4" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp39-cp39-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:bee8f53b2594749f4460d53253bae55d718f04e9b633efa0f5df8938bd98e4f0" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:938441babf3e5720e4459e306ef2809fb267680df9d1ff2873458b22aef60248" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp39-cp39-musllinux_1_1_aarch64.whl", hash = "sha256:7310ab23d7b0caebecc0e8be11a1146f320f5f07284000f6ea54793e83de1b75" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:16121eb030a2b13094cfec936b0c12e8b4063c5f839591ea7d0212336d8f9921" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp39-none-win32.whl", hash = "sha256:401cc21ef642ee235985d747f65e18f639464d377c70836c9003df208d582064" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-cp39-none-win_amd64.whl", hash = "sha256:7498f3ea7746133335a6adb67a77cf77227a8b82c8483f644a2e5f86fea42b8d" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp310-pypy310_pp73-macosx_10_12_x86_64.whl", hash = "sha256:e919f2e3e68bb51dc31de4fcbbeff3bdf9c1cad489044c75e2b982a91059bd3c" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp310-pypy310_pp73-macosx_11_0_arm64.whl", hash = "sha256:b8e9608f2773996cc272156e305bd79066163a66b0390fe21750aff62df1ac07" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp310-pypy310_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:39270a7050deaf50f7caff4c532c01b3c48f6608d42b3eacdebdc6795478c8df" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp310-pypy310_pp73-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:e005466632b1c5d2d2120f6de8aa768cc9d36cd1ab7d51d0c27a114c91a1e6ee" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp310-pypy310_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a07962340b36189b6c8feda552ea1bfeee6cf067ff922a1d7760662c2ee229e5" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp310-pypy310_pp73-musllinux_1_1_aarch64.whl", hash = "sha256:55046ad3dd5f2b3c67501fcc8c9cbe3e901d8355f08a3b745e9b57894855f85b" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp310-pypy310_pp73-musllinux_1_1_x86_64.whl", hash = "sha256:efcf0eb939988b627558aaf2b9dc3e56d759cad2e0cfa04fcab378e4b48fc4fd" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp39-pypy39_pp73-macosx_10_12_x86_64.whl", hash = "sha256:de082392a85eb0055cc055c535bff2f0cc15d7a000bdc36fbf601a0f3cf8507a" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp39-pypy39_pp73-macosx_11_0_arm64.whl", hash = "sha256:c3db46cc0647bfd88263afdb739b92017a02a87ee30945cb3e86c7e25c7c9917" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp39-pypy39_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a292392f24ab9abac5cfa8197e5a6208f2e43723420217e1ceba0b4ec77816ac" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp39-pypy39_pp73-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:8dcd91f4e60f62b20d83a87a84fe062035a1e3ff49a8c2bbdeb2d441c8e311f4" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp39-pypy39_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:900991a2b8ee35961b1095db7e265342e0e42a84c1a594823d5ee9f8fb791958" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp39-pypy39_pp73-musllinux_1_1_aarch64.whl", hash = "sha256:5a8d8261ca2133d4f98aa9627c748189502b3787537ba3d7e2beb4f7cfc5d627" },
-    { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.20.3-pp39-pypy39_pp73-musllinux_1_1_x86_64.whl", hash = "sha256:c4fd4d71e6deb6ddf99d8d0eab87d1d16f635898906e631914a9bae8ae9f2cfb" },
-]
-
-[[package]]
-name = "tokenizers"
 version = "0.22.1"
 source = { registry = "https://bytedpypi.byted.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.13' and sys_platform == 'win32'",
-    "python_full_version == '3.12.*' and sys_platform == 'win32'",
-    "python_full_version == '3.11.*' and sys_platform == 'win32'",
-    "python_full_version == '3.10.*' and sys_platform == 'win32'",
-    "python_full_version >= '3.13' and sys_platform != 'win32'",
-    "python_full_version == '3.12.*' and sys_platform != 'win32'",
-    "python_full_version == '3.11.*' and sys_platform != 'win32'",
-    "python_full_version == '3.10.*' and sys_platform != 'win32'",
-]
 dependencies = [
-    { name = "huggingface-hub", version = "1.2.3", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "huggingface-hub" },
 ]
 sdist = { url = "https://bytedpypi.byted.org/packages/tokenizers/tokenizers-0.22.1.tar.gz", hash = "sha256:61de6522785310a309b3407bac22d99c4db5dba349935e99e4d15ea2226af2d9" }
 wheels = [
@@ -6731,6 +6679,30 @@ dependencies = [
 sdist = { url = "https://bytedpypi.byted.org/packages/tqdm/tqdm-4.67.1.tar.gz", hash = "sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2" }
 wheels = [
     { url = "https://bytedpypi.byted.org/packages/tqdm/tqdm-4.67.1-py3-none-any.whl", hash = "sha256:26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2" },
+]
+
+[[package]]
+name = "transformers"
+version = "4.57.3"
+source = { registry = "https://bytedpypi.byted.org/simple" }
+dependencies = [
+    { name = "filelock", version = "3.19.1", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "filelock", version = "3.20.1", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "huggingface-hub" },
+    { name = "numpy", version = "1.26.4", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "numpy", version = "2.2.6", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version == '3.10.*'" },
+    { name = "numpy", version = "2.4.0", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "packaging" },
+    { name = "pyyaml" },
+    { name = "regex" },
+    { name = "requests" },
+    { name = "safetensors" },
+    { name = "tokenizers" },
+    { name = "tqdm" },
+]
+sdist = { url = "https://bytedpypi.byted.org/packages/transformers/transformers-4.57.3.tar.gz", hash = "sha256:df4945029aaddd7c09eec5cad851f30662f8bd1746721b34cc031d70c65afebc" }
+wheels = [
+    { url = "https://bytedpypi.byted.org/packages/transformers/transformers-4.57.3-py3-none-any.whl", hash = "sha256:c77d353a4851b1880191603d36acb313411d3577f6e2897814f333841f7003f4" },
 ]
 
 [[package]]
@@ -6839,6 +6811,57 @@ wheels = [
 ]
 
 [[package]]
+name = "tree-sitter-languages"
+version = "1.10.2"
+source = { registry = "https://bytedpypi.byted.org/simple" }
+dependencies = [
+    { name = "tree-sitter", version = "0.23.2", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "tree-sitter", version = "0.25.2", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
+]
+wheels = [
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:5580348f0b20233b1d5431fa178ccd3d07423ca4a3275df02a44608fd72344b9" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:103c7466644486b1e9e03850df46fc6aa12f13ca636c74f173270276220ac80b" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:d13db84511c6f1a7dc40383b66deafa74dabd8b877e3d65ab253f3719eccafd6" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp310-cp310-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:57adfa32be7e465b54aa72f915f6c78a2b66b227df4f656b5d4fbd1ca7a92b3f" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1c6385e033e460ceb8f33f3f940335f422ef2b763700a04f0089391a68b56153" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp310-cp310-musllinux_1_1_aarch64.whl", hash = "sha256:dfa3f38cc5381c5aba01dd7494f59b8a9050e82ff6e06e1233e3a0cbae297e3c" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp310-cp310-musllinux_1_1_i686.whl", hash = "sha256:9f195155acf47f8bc5de7cee46ecd07b2f5697f007ba89435b51ef4c0b953ea5" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:2de330e2ac6d7426ca025a3ec0f10d5640c3682c1d0c7702e812dcfb44b58120" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp310-cp310-win32.whl", hash = "sha256:c9731cf745f135d9770eeba9bb4e2ff4dabc107b5ae9b8211e919f6b9100ea6d" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp310-cp310-win_amd64.whl", hash = "sha256:6dd75851c41d0c3c4987a9b7692d90fa8848706c23115669d8224ffd6571e357" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:7eb7d7542b2091c875fe52719209631fca36f8c10fa66970d2c576ae6a1b8289" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:6b41bcb00974b1c8a1800c7f1bb476a1d15a0463e760ee24872f2d53b08ee424" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:6f370cd7845c6c81df05680d5bd96db8a99d32b56f4728c5d05978911130a853" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp311-cp311-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:a1dc195c88ef4c72607e112a809a69190e096a2e5ebc6201548b3e05fdd169ad" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9ae34ac314a7170be24998a0f994c1ac80761d8d4bd126af27ee53a023d3b849" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp311-cp311-musllinux_1_1_aarch64.whl", hash = "sha256:01b5742d5f5bd675489486b582bd482215880b26dde042c067f8265a6e925d9c" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp311-cp311-musllinux_1_1_i686.whl", hash = "sha256:ab1cbc46244d34fd16f21edaa20231b2a57f09f092a06ee3d469f3117e6eb954" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:0b1149e7467a4e92b8a70e6005fe762f880f493cf811fc003554b29f04f5e7c8" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp311-cp311-win32.whl", hash = "sha256:049276343962f4696390ee555acc2c1a65873270c66a6cbe5cb0bca83bcdf3c6" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp311-cp311-win_amd64.whl", hash = "sha256:7f3fdd468a577f04db3b63454d939e26e360229b53c80361920aa1ebf2cd7491" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:c0f4c8b2734c45859edc7fcaaeaab97a074114111b5ba51ab4ec7ed52104763c" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:eecd3c1244ac3425b7a82ba9125b4ddb45d953bbe61de114c0334fd89b7fe782" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:15db3c8510bc39a80147ee7421bf4782c15c09581c1dc2237ea89cefbd95b846" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp312-cp312-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:92c6487a6feea683154d3e06e6db68c30e0ae749a7ce4ce90b9e4e46b78c85c7" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6d2f1cd1d1bdd65332f9c2b67d49dcf148cf1ded752851d159ac3e5ee4f4d260" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp312-cp312-musllinux_1_1_aarch64.whl", hash = "sha256:976c8039165b8e12f17a01ddee9f4e23ec6e352b165ad29b44d2bf04e2fbe77e" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp312-cp312-musllinux_1_1_i686.whl", hash = "sha256:dafbbdf16bf668a580902e1620f4baa1913e79438abcce721a50647564c687b9" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:1aeabd3d60d6d276b73cd8f3739d595b1299d123cc079a317f1a5b3c5461e2ca" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp312-cp312-win32.whl", hash = "sha256:fab8ee641914098e8933b87ea3d657bea4dd00723c1ee7038b847b12eeeef4f5" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp312-cp312-win_amd64.whl", hash = "sha256:5e606430d736367e5787fa5a7a0c5a1ec9b85eded0b3596bbc0d83532a40810b" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:f8c6a936ae99fdd8857e91f86c11c2f5e507ff30631d141d98132bb7ab2c8638" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:c283a61423f49cdfa7b5a5dfbb39221e3bd126fca33479cd80749d4d7a6b7349" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:76e60be6bdcff923386a54a5edcb6ff33fc38ab0118636a762024fa2bc98de55" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp39-cp39-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:c00069f9575bd831eabcce2cdfab158dde1ed151e7e5614c2d985ff7d78a7de1" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:475ff53203d8a43ccb19bb322fa2fb200d764001cc037793f1fadd714bb343da" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp39-cp39-musllinux_1_1_aarch64.whl", hash = "sha256:26fe7c9c412e4141dea87ea4b3592fd12e385465b5bdab106b0d5125754d4f60" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp39-cp39-musllinux_1_1_i686.whl", hash = "sha256:8fed27319957458340f24fe14daad467cd45021da034eef583519f83113a8c5e" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:3657a491a7f96cc75a3568ddd062d25f3be82b6a942c68801a7b226ff7130181" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp39-cp39-win32.whl", hash = "sha256:33f7d584d01a7a3c893072f34cfc64ec031f3cfe57eebc32da2f8ac046e101a7" },
+    { url = "https://bytedpypi.byted.org/packages/tree-sitter-languages/tree_sitter_languages-1.10.2-cp39-cp39-win_amd64.whl", hash = "sha256:1b944af3ee729fa70fc8ae82224a9ff597cdb63addea084e0ea2fa2b0ec39bb7" },
+]
+
+[[package]]
 name = "tree-sitter-python"
 version = "0.23.6"
 source = { registry = "https://bytedpypi.byted.org/simple" }
@@ -6897,19 +6920,6 @@ dependencies = [
 sdist = { url = "https://bytedpypi.byted.org/packages/typer/typer-0.21.0.tar.gz", hash = "sha256:c87c0d2b6eee3b49c5c64649ec92425492c14488096dfbc8a0c2799b2f6f9c53" }
 wheels = [
     { url = "https://bytedpypi.byted.org/packages/typer/typer-0.21.0-py3-none-any.whl", hash = "sha256:c79c01ca6b30af9fd48284058a7056ba0d3bf5cf10d0ff3d0c5b11b68c258ac6" },
-]
-
-[[package]]
-name = "typer-slim"
-version = "0.21.0"
-source = { registry = "https://bytedpypi.byted.org/simple" }
-dependencies = [
-    { name = "click", version = "8.3.1", source = { registry = "https://bytedpypi.byted.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "typing-extensions", marker = "python_full_version >= '3.10'" },
-]
-sdist = { url = "https://bytedpypi.byted.org/packages/typer-slim/typer_slim-0.21.0.tar.gz", hash = "sha256:f2dbd150cfa0fead2242e21fa9f654dfc64773763ddf07c6be9a49ad34f79557" }
-wheels = [
-    { url = "https://bytedpypi.byted.org/packages/typer-slim/typer_slim-0.21.0-py3-none-any.whl", hash = "sha256:92aee2188ac6fc2b2924bd75bb61a340b78bd8cd51fd9735533ce5a856812c8e" },
 ]
 
 [[package]]

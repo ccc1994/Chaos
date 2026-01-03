@@ -12,8 +12,10 @@ from llama_index.core import (
 )
 from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core.node_parser import CodeSplitter, SentenceSplitter
-from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
+from tree_sitter_languages import get_parser
+from llama_index.llms.openai_like import OpenAILike
+
 
 # 配置日志
 logging.basicConfig(level=logging.INFO)
@@ -27,25 +29,36 @@ def _initialize_settings():
     """初始化 LlamaIndex 设置"""
     api_key = os.getenv("DASHSCOPE_API_KEY")
     base_url = os.getenv("DASHSCOPE_BASE_URL")
-    embed_model=os.getenv("EMBEDDING_MODEL_ID")
-    llm_model=os.getenv("DEFAULT_MODEL_ID")
+    embed_model = os.getenv("EMBEDDING_MODEL_ID")
+    llm_model = os.getenv("DEFAULT_MODEL_ID")
     
-    if not api_key or not base_url or not embed_model or not llm_model:
-        logger.error("DASHSCOPE_API_KEY 或 DASHSCOPE_BASE_URL 或 embed_model 或 llm_model 未设置，无法初始化 LlamaIndex")
+    if not api_key:
+        logger.error("DASHSCOPE_API_KEY 未设置，无法初始化 LlamaIndex")
         return False
         
-    Settings.llm = OpenAI(
-        model=llm_model,
-        api_key=api_key,
-        api_base=base_url,
-        temperature=0.1
-    )
-    Settings.embed_model = OpenAIEmbedding(
-        model_name=embed_model,
-        api_key=api_key,
-        api_base=base_url
-    )
-    return True
+    try:
+        from llama_index.embeddings.openai import OpenAIEmbedding
+        
+        Settings.llm = OpenAILike(
+            model=str(llm_model),
+            api_key=api_key,
+            api_base=base_url,
+            temperature=0.1,
+            is_chat_model=True,
+            is_function_calling_model=False,
+        )
+        Settings.embed_model = OpenAIEmbedding(
+            model_name=str(embed_model),
+            api_key=api_key,
+            api_base=base_url,
+            embed_batch_size=10
+        )
+        # DashScope 批量嵌入限制为 10
+        Settings.embed_batch_size = 10
+        return True
+    except Exception as e:
+        logger.error(f"LlamaIndex 设置初始化失败: {e}")
+        return False
 
 def load_ignore_patterns(project_root: str) -> List[str]:
     """从 .gitignore 加载忽略模式"""
@@ -101,34 +114,47 @@ def build_index(project_root: str):
                 )
                 documents = reader.load_data()
                 
-                # 定义不同语言的解析器
-                parsers = {
-                    ".py": CodeSplitter.from_defaults(language="python", chunk_lines=40),
-                    ".js": CodeSplitter.from_defaults(language="javascript", chunk_lines=40),
-                    ".ts": CodeSplitter.from_defaults(language="typescript", chunk_lines=40),
-                    ".tsx": CodeSplitter.from_defaults(language="typescript", chunk_lines=40),
-                    ".sh": CodeSplitter.from_defaults(language="bash", chunk_lines=40),
-                    ".go": CodeSplitter.from_defaults(language="golang", chunk_lines=40),
-                    ".java": CodeSplitter.from_defaults(language="java", chunk_lines=40),
-                    ".html": CodeSplitter.from_defaults(language="html", chunk_lines=40),
+                # 动态解析器映射
+                language_map = {
+                    ".py": "python",
+                    ".js": "javascript",
+                    ".ts": "typescript",
+                    ".tsx": "typescript",
+                    ".sh": "bash",
+                    ".go": "go",
+                    ".java": "java",
+                    ".html": "html",
+                    ".cpp": "cpp",
+                    ".c": "c",
                 }
-                
+                splitter_cache = {}
+
                 nodes = []
                 for doc in documents:
                     file_path = doc.metadata.get("file_path", "")
                     file_ext = os.path.splitext(file_path)[1].lower()
+                    lang = language_map.get(file_ext)
                     
-                    # 根据后缀选择解析器，如果没有匹配的，回退到普通 SentenceSplitter
-                    parser = parsers.get(file_ext)
-                    if parser:
-                        try:
-                            nodes.extend(parser.get_nodes_from_documents([doc]))
-                        except Exception as e:
-                            logger.warning(f"使用 CodeSplitter 处理 {file_path} 出错，回退到 SentenceSplitter: {e}")
-                            nodes.extend(SentenceSplitter().get_nodes_from_documents([doc]))
+                    if lang:
+                        if lang not in splitter_cache:
+                            try:
+                                # 显式传递 parser 以绕过 tree_sitter_language_pack 缺失的问题
+                                parser = get_parser(lang)
+                                splitter_cache[lang] = CodeSplitter(
+                                    language=lang,
+                                    chunk_lines=40,
+                                    chunk_lines_overlap=10,
+                                    max_chars=1500,
+                                    parser=parser
+                                )
+                            except Exception as e:
+                                logger.warning(f"为 {lang} 初始化 CodeSplitter 失败: {e}。将对 {file_path} 使用 SentenceSplitter。")
+                                splitter_cache[lang] = SentenceSplitter()
+                        
+                        splitter = splitter_cache[lang]
+                        nodes.extend(splitter.get_nodes_from_documents([doc]))
                     else:
                         nodes.extend(SentenceSplitter().get_nodes_from_documents([doc]))
-                
                 _index = VectorStoreIndex(nodes, storage_context=storage_context)
                 logger.info(f"索引构建完成并存入 ChromaDB，路径: {db_path}")
         except Exception as e:
@@ -142,16 +168,9 @@ def build_index_async(project_root: str):
     thread.start()
     logger.info("已启动异步索引构建任务 (使用 ChromaDB)。")
 
+
+# 2. 修改 code_search 中的 query_engine 创建部分
 def code_search(query: str) -> str:
-    """
-    基于 LlamaIndex 和 ChromaDB 的代码搜索工具。
-    
-    Args:
-        query: 搜索词或自然语言问题
-        
-    Returns:
-        搜索结果，包含相关的代码片段和文件路径
-    """
     global _index
     
     if _index is None:
