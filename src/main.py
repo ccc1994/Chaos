@@ -17,6 +17,7 @@ from src.agent.manager import ensure_project_setup
 from src.agent.agents import create_agents
 from src.agent.orchestrator import setup_orchestration, start_multi_agent_session
 from src.agent.context import get_level1_context
+from src.tools.index_tools import build_index_async
 
 from openinference.instrumentation.autogen import AutogenInstrumentor
 from opentelemetry import trace
@@ -51,6 +52,9 @@ def main():
     project_root =os.getcwd()
     # todo 没必要?
     ensure_project_setup(project_root)
+    
+    # 构建代码索引 (异步)
+    build_index_async(project_root)
 
     # 2. 配置检查
     api_key = os.getenv("DASHSCOPE_API_KEY")
