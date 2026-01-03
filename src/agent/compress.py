@@ -182,10 +182,10 @@ class LLMMessagesCompressor(MessageTransform):
             # 计算最近消息的范围
             recent_start_index = len(messages) - self.recent_rounds
             
-            # 检查最近几轮消息的最后一条是否是工具调用结果
-            if messages and messages[-1].get("role") == "tool":
-                # 如果是工具调用结果，将其加入压缩范围，调整最近消息的起始索引
-                recent_start_index += 1
+            # 优化：确保不会因为压缩而切断 assistant.tool_calls 和 tool 结果的关联
+            # 如果起始消息是 tool，我们必须向前追溯到起始的 assistant 消息
+            while recent_start_index > self.keep_first_n and messages[recent_start_index].get("role") == "tool":
+                recent_start_index -= 1
             
             recent_messages = messages[recent_start_index:]
             recent_token_count = self._count_total_tokens(recent_messages)
@@ -221,7 +221,9 @@ class LLMMessagesCompressor(MessageTransform):
                     # 先将缓存中的压缩消息转换为可读文本
                     compressed_content = self._compression_cache["compressed_message"].get("content", "")
                     # 移除可能的标记
-                    if "[历史对话摘要]: " in compressed_content:
+                    if "### [历史对话模拟摘要]" in compressed_content:
+                        compressed_content = compressed_content.replace("### [历史对话模拟摘要]\n", "")
+                    elif "[历史对话摘要]: " in compressed_content:
                         compressed_content = compressed_content.replace("[历史对话摘要]: ", "")
                     
                     # 构建需要再次压缩的文本
@@ -241,7 +243,7 @@ class LLMMessagesCompressor(MessageTransform):
                     # 更新缓存
                     self._compression_cache["compressed_message"] = {
                         "role": "user",
-                        "content": f"[历史对话摘要]: {compressed_text}",
+                        "content": f"### [历史对话模拟摘要]\n{compressed_text}",
                         "name": "compressed_history"
                     }
                     # 使用调整后的索引更新缓存
@@ -298,10 +300,10 @@ class LLMMessagesCompressor(MessageTransform):
                 # 计算压缩消息和最近消息的范围
                 recent_start_index = len(messages) - self.recent_rounds
                 
-                # 检查最近几轮消息的最后一条是否是工具调用结果
-                if messages and messages[-1].get("role") == "tool":
-                    # 如果是工具调用结果，将其加入压缩范围，调整最近消息的起始索引
-                    recent_start_index += 1
+                # 优化：确保不会因为压缩而切断 assistant.tool_calls 和 tool 结果的关联
+                # 如果起始消息是 tool，我们必须向前追溯到起始的 assistant 消息
+                while recent_start_index > self.keep_first_n and messages[recent_start_index].get("role") == "tool":
+                    recent_start_index -= 1
                 
                 # 考虑keep_first_n参数，只压缩keep_first_n之后的消息
                 messages_to_compress = messages[self.keep_first_n:recent_start_index]
@@ -323,7 +325,7 @@ class LLMMessagesCompressor(MessageTransform):
                 # 创建压缩后的消息
                 compressed_message = {
                     "role": "user",
-                    "content": f"[历史对话摘要]: {compressed_text}",
+                    "content": f"### [历史对话模拟摘要]\n{compressed_text}",
                     "name": "compressed_history"
                 }
 

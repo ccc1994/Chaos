@@ -64,7 +64,7 @@ class TestCompress(unittest.TestCase):
 
         self.assertEqual(len(transformed), 3)
         self.assertEqual(transformed[0]["content"], messages[0]["content"])
-        self.assertTrue("[历史对话摘要]: Summary of history" in transformed[1]["content"])
+        self.assertTrue("### [历史对话模拟摘要]" in transformed[1]["content"])
         self.assertEqual(transformed[2]["content"], messages[3]["content"])
         
         # Verify caching
@@ -92,6 +92,42 @@ class TestCompress(unittest.TestCase):
         msg = {"content": "123456789"} # 9 chars
         # len // 3 = 3
         self.assertEqual(compressor._count_tokens(msg), 3)
+
+    @patch("openai.OpenAI")
+    def test_tool_message_handling(self, mock_openai):
+        # Test that tool messages are not orphaned from their assistant calls
+        mock_client = MagicMock()
+        mock_openai.return_value = mock_client
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock(message=MagicMock(content="Summary"))]
+        mock_client.chat.completions.create.return_value = mock_response
+
+        compressor = LLMMessagesCompressor(
+            self.llm_config, 
+            max_tokens=10, # Very low to trigger compression
+            recent_rounds=1, # Would normally pick only the last message
+            keep_first_n=1
+        )
+        compressor.agent_name = "ToolTestAgent"
+        
+        messages = [
+            {"role": "system", "content": "System message"},
+            {"role": "user", "content": "User request"},
+            {"role": "assistant", "content": "I will call a tool", "tool_calls": [{"id": "1", "function": {"name": "f"}}]},
+            {"role": "tool", "content": "Tool result", "tool_call_id": "1"}
+        ]
+        
+        # recent_start_index initially 3 (Tool message)
+        # Fix should backtrack it to 2 (Assistant message)
+        transformed = compressor.apply_transform(messages)
+        
+        # Expected: [System, Summary, Assistant, Tool]
+        self.assertEqual(len(transformed), 4)
+        self.assertEqual(transformed[0]["role"], "system")
+        self.assertTrue("Summary" in transformed[1]["content"])
+        self.assertEqual(transformed[2]["role"], "assistant")
+        self.assertEqual(transformed[3]["role"], "tool")
+        self.assertEqual(transformed[3]["tool_call_id"], "1")
 
 if __name__ == "__main__":
     unittest.main()

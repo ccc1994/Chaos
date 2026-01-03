@@ -48,21 +48,26 @@ def setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_
 
     compressor = LLMMessagesCompressor(
         llm_config=manager_config,
-        max_tokens=5000,  
+        max_tokens=10000,  
         keep_first_n=1,  
         recent_rounds=5,  
-        compression_prompt="你是一个专业的文本压缩专家。请将以下对话压缩到约 {target_token} 个token，保留核心信息、关键细节和重要结论, 对于已经完成的任务, 你可以一笔带过,对于工具调用及其结果,你可以忽略, 对于还未解决的报错, 你需要简单描述下什么行为导致了什么错误,发生了多少次等关键信息",
+        compression_prompt="""
+        你是一个专业的大模型对话压缩专家, 下面是 coder, reviewer, tester 三个角色的对话。请将以下对话压缩到约 {target_token} 个token.
+        请以**对话摘要**的形式进行总结，保留核心信息、关键细节和重要结论。格式要求如下：\n- User: [用户的主要需求及最新指令]\n- Assistant: [Agent 的核心进展、已执行的关键操作及目前状态]\n对于已完成的任务，请简要概括；对于未解决的错误，请详细说明其行为和报错信息。不要包含具体的工具调用明细或代码段。
+        """,
         target_token=500  # 压缩目标 token 数
     )
     compressor.agent_name = "ImplementationGroup"
 
     architectCompressor = LLMMessagesCompressor(
         llm_config=manager_config,
-        max_tokens=5000,  
+        max_tokens=10000,  
         keep_first_n=1,  
-        recent_rounds=1,  
-        compression_prompt="你是一个专业的文本压缩专家。请将以下对话压缩到约 {target_token} 个token，保留核心信息、关键细节和重要结论。",
-        target_token=500  # 压缩目标 token 数
+        recent_rounds=2,  
+        compression_prompt="""你是一个专业的大模型对话压缩专家, 下面是 architect 正在调研项目或者是正在推进开发计划。请将以下对话压缩到约 {target_token} 个token。
+        请简要介绍当前的工作内容及最新进度，**重点关注任务进度而非具体文件细节**。要求：以对话摘要的形式呈现，清晰说明目前完成了什么，下一步计划是什么。不要包含具体的代码内容。
+        """,
+        target_token=2000  # 压缩目标 token 数
     )
     architectCompressor.agent_name = "Architect"
 
