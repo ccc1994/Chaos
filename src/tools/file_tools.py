@@ -185,6 +185,63 @@ def list_directory(path: str = ".") -> str:
         return f"列出目录失败：{str(e)}"
 list_directory.tool_type = "read"  # 添加工具类型标识
 
+def get_file_tree(path: str = ".", max_depth: int = 2) -> str:
+    """
+    以树状结构列出目录内容，支持限制递归深度。
+    
+    Args:
+        path: 目标目录路径，默认为当前目录 "."
+        max_depth: 最大递归深度，默认为 2。
+    """
+    try:
+        if not os.path.exists(path):
+            return f"错误：路径 '{path}' 不存在。"
+        
+        tree = []
+        ignore_dirs = {".git", ".ca", "node_modules", "__pycache__", ".venv", "build", "dist", ".cache"}
+        
+        # 记录起始路径的深度
+        start_path = os.path.abspath(path)
+        
+        for root, dirs, files in os.walk(path, topdown=True):
+            # 剪枝：原地修改 dirs 列表
+            dirs[:] = [d for d in dirs if d not in ignore_dirs]
+            
+            # 计算相对于 path 的深度
+            rel_path = os.path.relpath(root, path)
+            if rel_path == ".":
+                depth = 0
+            else:
+                depth = rel_path.count(os.sep) + 1
+            
+            if depth > max_depth:
+                dirs[:] = [] # 停止进一步递归
+                continue
+            
+            # 生成缩进
+            indent = "  " * depth
+            folder_name = os.path.basename(root) or root
+            
+            if depth == 0:
+                tree.append(f"{folder_name}/")
+            else:
+                tree.append(f"{indent}├── {folder_name}/")
+            
+            # 列出文件
+            if depth < max_depth:
+                sub_indent = "  " * (depth + 1)
+                for f in sorted(files):
+                    tree.append(f"{sub_indent}└── {f}")
+            elif dirs:
+                # 如果有子目录但达到深度限制
+                sub_indent = "  " * (depth + 1)
+                tree.append(f"{sub_indent}└── ... (max depth reached)")
+
+        return "\n".join(tree)
+    except Exception as e:
+        return f"获取文件树失败：{str(e)}"
+get_file_tree.tool_type = "read"
+
 def move_file(src: str, dst: str) -> str:
     """移动或重命名文件/目录。"""
     try:
@@ -227,6 +284,7 @@ def get_file_tools(tool_type: str = None) -> list:
         create_directory,
         delete_file,
         list_directory,
+        get_file_tree,
         move_file,
         file_exists
     ]

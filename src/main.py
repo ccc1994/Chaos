@@ -1,5 +1,6 @@
 import os
 import sys
+from src.tools.file_tools import get_file_tree
 
 # 确保项目根目录在 sys.path 中，以解决 'src' 导入问题
 import sys
@@ -16,7 +17,6 @@ from prompt_toolkit.key_binding import KeyBindings
 from src.agent.manager import ensure_project_setup
 from src.agent.agents import create_agents
 from src.agent.orchestrator import setup_orchestration, start_multi_agent_session
-from src.agent.context import get_level1_context
 from src.tools.index_tools import build_index_async
 
 from openinference.instrumentation.autogen import AutogenInstrumentor
@@ -90,8 +90,8 @@ def main():
                 continue
 
             # 自动注入第一级上下文 (Level 1 Context)
-            l1_context = get_level1_context(project_root)
-            full_prompt = f"{l1_context}\n[用户需求]\n{user_input}"
+            l1_context = get_file_tree(project_root)
+            full_prompt = f"ProjectStructure:\n{l1_context}\n[用户需求]\n{user_input}"
 
             # 启动会话
             console.print(f"\n[bold blue]正在启动...[/bold blue]\n")

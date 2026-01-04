@@ -106,7 +106,6 @@ def build_index(project_root: str):
                 logger.info("正在构建新索引并存入 ChromaDB...")
                 
                 ignore_patterns = load_ignore_patterns(project_root)
-                logger.info(f"使用忽略模式: {ignore_patterns}")
 
                 reader = SimpleDirectoryReader(
                     input_dir=project_root,

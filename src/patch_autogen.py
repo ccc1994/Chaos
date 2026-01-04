@@ -107,4 +107,3 @@ def patch_autogen_instrumentation():
         return self
 
     AutogenInstrumentor.instrument = patched_instrument
-    print("Autogen instrumentation patched successfully to show agent names.")
