@@ -155,14 +155,21 @@ def create_agents(api_key: str, base_url: str):
             caller=architect,
             executor=user_proxy,
             name="code_search",
-            description="基于 LlamaIndex 的代码向量搜索工具。当你需要了解代码实现细节、查找特定功能的实现位置或进行跨文件分析时使用。"
+            description=code_search.__doc__   
         )
         register_function(
             code_search,
             caller=coder,
             executor=coder,
             name="code_search",
-            description="基于 LlamaIndex 的代码向量搜索工具。当你需要了解代码实现细节、查找特定功能的实现位置或进行跨文件分析时使用。"
+            description=code_search.__doc__
+        )
+        register_function(
+            code_search,
+            caller=reviewer,
+            executor=reviewer,
+            name="code_search",
+            description=code_search.__doc__
         )
 
         # 2. 为 Coder 注册 Shell 工具（用于运行构建、测试等命令）

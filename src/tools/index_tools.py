@@ -1,4 +1,5 @@
 import os
+import config
 import threading
 import logging
 from typing import List, Optional
@@ -15,6 +16,7 @@ from llama_index.core.node_parser import CodeSplitter, SentenceSplitter
 from llama_index.embeddings.openai import OpenAIEmbedding
 from tree_sitter_languages import get_parser
 from llama_index.llms.openai_like import OpenAILike
+from llama_index.core.postprocessor import SimilarityPostprocessor
 
 
 # 配置日志
@@ -169,16 +171,45 @@ def build_index_async(project_root: str):
     logger.info("已启动异步索引构建任务 (使用 ChromaDB)。")
 
 
-# 2. 修改 code_search 中的 query_engine 创建部分
 def code_search(query: str) -> str:
+    """
+    语义化代码库搜索工具。基于向量索引和 LLM 总结，通过自然语言查询代码/询问实现细节。
+    
+    适用场景:
+    1. 查找特定功能（如“退款”、“鉴权”）的具体实现位置。
+    2. 跨文件分析逻辑关系（如“支付接口是如何被调用的”）。
+    3. 了解项目中未知的类、函数或变量的用途和工作原理。
+    
+    参数说明:
+    - query (str): 描述你想要查找内容的自然语言指令或问题。
+    
+    调用示例:
+    - "找到处理用户登录逻辑的代码片段"
+    - "LLMMessagesCompressor 类的主要功能是什么？"
+    - "项目中如何配置 ChromaDB 的持久化存储？"
+    - "搜索快速排序(quick_sort)函数的定义及其所在文件"
+    """
     global _index
     
     if _index is None:
-        return "索引尚未就绪，请稍后再试。正在后台构建索引..."
-        
+        return "ERROR: 索引尚未就绪，系统正在后台扫描项目目录，请等待约 1-2 分钟后再试。"
+
+    base_prefix = os.path.join(config.project_root, "")
+    
     try:
-        query_engine = _index.as_query_engine(similarity_top_k=5)
-        response = query_engine.query(query)
-        return str(response)
+        processor = SimilarityPostprocessor(similarity_cutoff=0.1)
+        
+        query_engine = _index.as_query_engine(
+            similarity_top_k=5,
+            node_postprocessors=[processor]
+        )
+        
+        response_obj = query_engine.query(query)
+        
+        # 1. 处理回答正文：将回答中出现的绝对路径前缀删掉
+        final_response_text = str(response_obj).replace(base_prefix, "")
+        
+        return final_response_text
+
     except Exception as e:
-        return f"搜索时出错: {e}"
+        return f"搜索执行出错: {str(e)}" 

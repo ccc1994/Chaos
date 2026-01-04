@@ -28,7 +28,7 @@ from opentelemetry.sdk.resources import Resource
 from openinference.instrumentation.openai import OpenAIInstrumentor
 from src.cli.banner import print_banner
 from src.patch_autogen import patch_autogen_instrumentation
-
+import config
 
 console = Console()
 
@@ -50,6 +50,7 @@ def main():
     patch_autogen_instrumentation() # Apply the patch
     AutogenInstrumentor().instrument()
     project_root =os.getcwd()
+    config.project_root = project_root
     # todo 没必要?
     ensure_project_setup(project_root)
     

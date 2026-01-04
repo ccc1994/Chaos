@@ -27,9 +27,7 @@ def test_standalone_index():
     
     # 3. 进行搜索测试
     queries = [
-        "LLMMessagesCompressor 的实现逻辑是什么？",
-        "如何配置跨语言的代码分割 (CodeSplitter)？",
-        "项目中使用了哪些向量数据库？"
+        "压缩上下文的代码在哪个文件",
     ]
     
     for query in queries:
