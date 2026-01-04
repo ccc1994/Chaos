@@ -15,7 +15,7 @@ from rich.panel import Panel
 from rich.text import Text
 from rich import box
 from rich.padding import Padding
-from prompt_toolkit import prompt
+from prompt_toolkit import PromptSession
 from prompt_toolkit.key_binding import KeyBindings
 
 from src.agent.manager import ensure_project_setup, load_project_memory
@@ -106,9 +106,10 @@ async def main():
 
     # 5. 交互循环
     first_time = True
+    session = PromptSession()
     while True:
         try:
-            user_input = get_advanced_input()
+            user_input = await get_advanced_input_async(session)
             
             if user_input.lower() in ["exit", "quit"]:
                 console.print("[yellow]正在关闭...[/yellow]")
@@ -137,7 +138,7 @@ async def main():
         except Exception as e:
             console.print(f"[bold red]发生意外错误：[/bold red] {e}")
 
-def get_advanced_input():
+async def get_advanced_input_async(session):
     kb = KeyBindings()
 
     # 绑定 Alt+Enter 为换行符 (在终端中通常映射为 Esc+Enter)
@@ -151,7 +152,7 @@ def get_advanced_input():
         # 如果当前内容为空，或者你定义了某些条件，可以不提交
         event.current_buffer.validate_and_handle()
 
-    return prompt("> ", key_bindings=kb, multiline=True)
+    return await session.prompt_async("> ", key_bindings=kb, multiline=True)
 
 
 
