@@ -7,7 +7,8 @@
 
 ## 工具调用
 调用工具时, 请根据工具说明, 参考说明中的示例, 并严格按照工具的规范进行调用
-1. 当你需要读取/修改代码但不知道具体文件位置时，请先使用 semantic_code_search 工具获取逻辑总结和文件路径，不要盲目猜测。
+1. 当你需要查找特定功能实现但不知道位置时，请先使用 `semantic_code_search` 进行语义搜索。
+2. 当你需要**精确分析语法关系**（例如查找接口实现、交叉引用分析）时，请使用 LSP 工具（`lsp_get_definition`, `lsp_find_references`, `lsp_get_call_hierarchy`）。
 
 ## 循环检测与熔断
 - 如果 Coder 连续 **3 次或以上** 返回相同或类似的错误（如重复的 "No such file or directory"）

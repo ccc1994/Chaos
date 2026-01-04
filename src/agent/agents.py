@@ -4,6 +4,7 @@ from src.tools.file_tools import get_file_tools
 from src.tools.shell_tools import get_shell_tools
 from src.tools.git_tools import get_git_tools
 from src.tools.index_tools import semantic_code_search
+from src.tools.lsp_tools import get_lsp_tools
 import warnings
 
 def load_role_prompt(role: str) -> str:
@@ -148,8 +149,32 @@ def create_agents(api_key: str, base_url: str):
                 name=tool.__name__,
                 description=tool.__doc__
             )
+            
+        # 3. 为相关角色注册 LSP 工具
+        for tool in get_lsp_tools():
+            register_function(
+                tool,
+                caller=architect,
+                executor=user_proxy,
+                name=tool.__name__,
+                description=tool.__doc__
+            )
+            register_function(
+                tool,
+                caller=coder,
+                executor=coder,
+                name=tool.__name__,
+                description=tool.__doc__
+            )
+            register_function(
+                tool,
+                caller=reviewer,
+                executor=reviewer,
+                name=tool.__name__,
+                description=tool.__doc__
+            )
 
-        # 3. 注册代码搜索工具 (LlamaIndex)
+        # 4. 注册代码搜索工具 (LlamaIndex)
         register_function(
             semantic_code_search,
             caller=architect,
