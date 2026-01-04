@@ -3,7 +3,7 @@ from autogen import AssistantAgent, UserProxyAgent, register_function
 from src.tools.file_tools import get_file_tools
 from src.tools.shell_tools import get_shell_tools
 from src.tools.git_tools import get_git_tools
-from src.tools.index_tools import code_search
+from src.tools.index_tools import semantic_code_search
 import warnings
 
 def load_role_prompt(role: str) -> str:
@@ -151,25 +151,25 @@ def create_agents(api_key: str, base_url: str):
 
         # 3. 注册代码搜索工具 (LlamaIndex)
         register_function(
-            code_search,
+            semantic_code_search,
             caller=architect,
             executor=user_proxy,
-            name="code_search",
-            description=code_search.__doc__   
+            name="semantic_code_search",
+            description=semantic_code_search.__doc__   
         )
         register_function(
-            code_search,
+            semantic_code_search,
             caller=coder,
             executor=coder,
-            name="code_search",
-            description=code_search.__doc__
+            name="semantic_code_search",
+            description=semantic_code_search.__doc__
         )
         register_function(
-            code_search,
+            semantic_code_search,
             caller=reviewer,
             executor=reviewer,
-            name="code_search",
-            description=code_search.__doc__
+            name="semantic_code_search",
+            description=semantic_code_search.__doc__
         )
 
         # 2. 为 Coder 注册 Shell 工具（用于运行构建、测试等命令）

@@ -20,20 +20,17 @@ def setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_
         if "TODO:" in full_content:
             return full_content.split("TODO:", 1)[-1].strip()
         return full_content
-    def task_trigger_condition(sender, messages=None):
+    def task_trigger_condition(sender):
         # 1. 检查最新消息的内容
         try:
-            if messages and len(messages) > 0:
-                # 如果提供了messages参数，使用最新消息
-                last_msg_content = messages[-1].get("content", "")
-                return "TODO:" in last_msg_content
-            else:
-                # 如果没有messages参数，尝试从sender获取最后一条消息
-                last_msg_content = sender.last_message().get("content", "")
-                return "TODO:" in last_msg_content
+            # 如果没有messages参数，尝试从sender获取最后一条消息
+            last_msg = sender.last_message()
+            last_msg_content = last_msg.get("content", "")
+            return "TODO:" in last_msg_content and len(last_msg.get("tool_calls",[])) < 1
         except Exception as e:
             # 如果发生任何异常，返回False
             return False
+        return False
 
 
     user_proxy.register_nested_chats(

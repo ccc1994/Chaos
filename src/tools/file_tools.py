@@ -218,23 +218,26 @@ def get_file_tree(path: str = ".", max_depth: int = 2) -> str:
                 dirs[:] = [] # 停止进一步递归
                 continue
             
-            # 生成缩进
-            indent = "  " * depth
-            folder_name = os.path.basename(root) or root
-            
             if depth == 0:
-                tree.append(f"{folder_name}/")
-            else:
-                tree.append(f"{indent}├── {folder_name}/")
+                # 只列出根目录下的文件，跳过目录名本身
+                for f in sorted(files):
+                    tree.append(f"├── {f}")
+                continue
+
+            # 对于子目录 (depth >= 1)
+            # 缩进根据深度调整，depth=1 时无缩进
+            indent = "  " * (depth - 1)
+            folder_name = os.path.basename(root)
+            tree.append(f"{indent}└── {folder_name}/")
             
-            # 列出文件
+            # 列出该目录下的文件
             if depth < max_depth:
-                sub_indent = "  " * (depth + 1)
+                sub_indent = "  " * depth
                 for f in sorted(files):
                     tree.append(f"{sub_indent}└── {f}")
             elif dirs:
                 # 如果有子目录但达到深度限制
-                sub_indent = "  " * (depth + 1)
+                sub_indent = "  " * depth
                 tree.append(f"{sub_indent}└── ... (max depth reached)")
 
         return "\n".join(tree)

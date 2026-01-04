@@ -91,7 +91,7 @@ def main():
 
             # 自动注入第一级上下文 (Level 1 Context)
             l1_context = get_file_tree(project_root)
-            full_prompt = f"ProjectStructure:\n{l1_context}\n[用户需求]\n{user_input}"
+            full_prompt = f"[ProjectStructure]:\n{l1_context}\n[用户需求]\n{user_input}"
 
             # 启动会话
             console.print(f"\n[bold blue]正在启动...[/bold blue]\n")

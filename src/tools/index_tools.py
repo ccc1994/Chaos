@@ -170,7 +170,7 @@ def build_index_async(project_root: str):
     logger.info("已启动异步索引构建任务 (使用 ChromaDB)。")
 
 
-def code_search(query: str) -> str:
+def semantic_code_search(query: str) -> str:
     """
     语义化代码库搜索工具。基于向量索引和 LLM 总结，通过自然语言查询代码/询问实现细节。
     
