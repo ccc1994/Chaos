@@ -164,7 +164,16 @@ def build_index(project_root: str):
             db = chromadb.PersistentClient(path=db_path)
             chroma_collection = db.get_or_create_collection("code_index")
             vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
-            storage_context = StorageContext.from_defaults(vector_store=vector_store)
+            
+            # 尝试加载持久化的 StorageContext (包含 docstore)
+            try:
+                storage_context = StorageContext.from_defaults(
+                    persist_dir=db_path, 
+                    vector_store=vector_store
+                )
+            except Exception:
+                # 首次运行或加载失败，创建新的
+                storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
             ignore_patterns = load_ignore_patterns(project_root)
 
