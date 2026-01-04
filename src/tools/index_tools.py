@@ -203,6 +203,8 @@ def build_index(project_root: str):
                         _index.storage_context.persist(persist_dir=db_path)
                     else:
                         logger.info("未检测到文件变更。")
+                except ValueError:
+                    logger.warning(f"在 {project_root} 中未找到可索引的文件，跳过启动时增量更新。")
                 except Exception as update_e:
                     logger.warning(f"启动时增量更新失败: {update_e}")
 
