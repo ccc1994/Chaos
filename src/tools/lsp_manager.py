@@ -105,6 +105,11 @@ class LSPManager:
                 # for diag in params.diagnostics:
                 #     logger.debug(f"[{language_id}] 诊断: {diag.message} ({diag.range.start.line+1}:{diag.range.start.character+1})")
 
+        @client.feature("$/typescriptVersion")
+        def on_typescript_version(params: Any):
+            # 这是一个非标准通知, 注册它以抑制 "Ignoring notification" 警告
+            pass
+
     async def get_client(self, language_id: str) -> Optional[BaseLanguageClient]:
         """获取或启动指定语言的 LSP 客户端。"""
         if language_id in self.clients:
