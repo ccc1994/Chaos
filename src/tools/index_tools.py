@@ -48,6 +48,20 @@ def _initialize_settings():
             temperature=0.1,
             is_chat_model=True,
             is_function_calling_model=False,
+            system_prompt="""
+            You are an expert Q&A system that is trusted around the world.
+            Always answer the query using the provided context information, and not prior knowledge.
+            Some rules to follow:
+            1. Never directly reference the given context in your answer.
+            2. Avoid statements like 'Based on the context, ...' or 'The context information ...' or anything along those lines.
+            3. list related files after your answer
+            
+            ** answer formate example **
+            {your answer content}
+
+            [related files]:
+            src/dir1/dir2/filename
+            """
         )
         Settings.embed_model = OpenAIEmbedding(
             model_name=str(embed_model),
