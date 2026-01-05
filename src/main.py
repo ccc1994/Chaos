@@ -107,11 +107,15 @@ async def main():
     # 5. 交互循环
     first_time = True
     session = PromptSession()
+    last_interrupt_time = 0
+    
     while True:
         try:
             user_input = await get_advanced_input_async(session)
+            # 成功输入后重置中断计时
+            last_interrupt_time = 0
             
-            if user_input.lower() in ["exit", "quit"]:
+            if user_input.strip().lower() == "exit":
                 console.print("[yellow]正在关闭...[/yellow]")
                 break
             
@@ -133,8 +137,15 @@ async def main():
             start_multi_agent_session(manager, user_proxy, full_prompt)
 
         except KeyboardInterrupt:
-            console.print("\n[yellow]正在关闭...[/yellow]")
-            break
+            import time
+            current_time = time.time()
+            if current_time - last_interrupt_time < 2:
+                console.print("\n[yellow]检测到连续两次 Ctrl+C，正在退出...[/yellow]")
+                break
+            else:
+                last_interrupt_time = current_time
+                console.print("\n[yellow]\n再次按下 Ctrl+C 以退出，或输入 'exit'。[/yellow]")
+                continue
         except Exception as e:
             console.print(f"[bold red]发生意外错误：[/bold red] {e}")
 
