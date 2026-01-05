@@ -65,6 +65,12 @@ def analyze_command_with_llm(command: str) -> dict:
         return {"is_blocking": is_blocking_heuristic, "is_interactive": is_interactive_heuristic, "reason": "降级到启发式规则"}
 
 
+def truncate_output(text: str, max_length: int = 5000) -> str:
+    if len(text) <= max_length:
+        return text
+    return f"...(前略 {len(text) - max_length} 字符)...\n" + text[-max_length:]
+
+
 def execute_shell(command: str, timeout: int = None, cwd: str = ".") -> str:
     """
     执行 shell 命令（支持实时输出和工作目录）。
@@ -202,10 +208,10 @@ def execute_shell(command: str, timeout: int = None, cwd: str = ".") -> str:
                     if process.poll() is None:
                         console.print(f"[green]✓[/green] 命令已在后台运行（PID: {process.pid}）")
                         initial_output_str = ''.join(initial_output) if initial_output else "暂无初始输出"
-                        return f"命令已移至后台继续运行（PID: {process.pid}）\n初始输出：\n{initial_output_str}\n注意：您可以使用 'kill {process.pid}' 停止它。"
+                        return truncate_output(f"命令已移至后台继续运行（PID: {process.pid}）\n初始输出：\n{initial_output_str}\n注意：您可以使用 'kill {process.pid}' 停止它。")
                     else:
                         stdout, stderr = process.communicate()
-                        return f"命令在后台运行结束（退出码: {process.returncode}）\n输出：\n{''.join(initial_output) + stdout}\n错误：\n{stderr}"
+                        return truncate_output(f"命令在后台运行结束（退出码: {process.returncode}）\n输出：\n{''.join(initial_output) + stdout}\n错误：\n{stderr}")
                 else:
                     return "用户取消了命令的后台运行。"
         elif is_blocking:
@@ -253,14 +259,14 @@ def execute_shell(command: str, timeout: int = None, cwd: str = ".") -> str:
             if process.poll() is None:
                 console.print(f"\n[green]✓[/green] 命令已在后台启动（PID: {process.pid}）")
                 result = ''.join(output_lines) if output_lines else "暂无初始输出"
-                return f"命令已在后台启动（PID: {process.pid}）\n初始输出：\n{result}\n\n注意：命令将继续运行，您可以使用 'kill {process.pid}' 停止它。"
+                return truncate_output(f"命令已在后台启动（PID: {process.pid}）\n初始输出：\n{result}\n\n注意：命令将继续运行，您可以使用 'kill {process.pid}' 停止它。")
             else:
                 stdout, stderr = process.communicate()
                 full_out = "".join(output_lines) + stdout
                 console.print(full_out)
                 if stderr:
                     console.print(f"[red]{stderr}[/red]")
-                return f"命令启动后立即退出（退出码: {process.returncode}）\n输出：\n{full_out}\n错误：\n{stderr}"
+                return truncate_output(f"命令启动后立即退出（退出码: {process.returncode}）\n输出：\n{full_out}\n错误：\n{stderr}")
         else:
             # 非交互式非阻塞命令：正常前台运行
             console.print(f"[dim]执行命令：{command}[/dim]")
@@ -338,7 +344,7 @@ def execute_shell(command: str, timeout: int = None, cwd: str = ".") -> str:
             if full_errors:
                 result_text += f"\nErrors:\n{full_errors}"
             
-            return result_text or "命令执行成功（无输出）。"
+            return truncate_output(result_text) or "命令执行成功（无输出）。"
         
     except Exception as e:
         return f"执行命令时出错：{str(e)}"
