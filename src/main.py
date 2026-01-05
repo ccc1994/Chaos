@@ -145,7 +145,7 @@ async def main():
             import time
             current_time = time.time()
             if current_time - last_interrupt_time < 2:
-                console.print("\n[yellow]检测到连续两次 Ctrl+C，正在退出...[/yellow]")
+                console.print("\n[yellow]正在退出...[/yellow]")
                 break
             else:
                 last_interrupt_time = current_time

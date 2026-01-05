@@ -7,7 +7,7 @@ from rich.logging import RichHandler
 from rich.console import Console
 
 # 默认日志目录
-LOG_DIR = "logs"
+LOG_DIR = "~/.coding-agent/logs"
 
 def setup_logger(log_level=logging.INFO, console_output=False):
     """
@@ -17,12 +17,12 @@ def setup_logger(log_level=logging.INFO, console_output=False):
         log_level: 日志级别
         console_output: 是否同时输出到控制台
     """
-    if not os.path.exists(LOG_DIR):
-        os.makedirs(LOG_DIR)
+    if not os.path.exists(os.path.expanduser(LOG_DIR)):
+        os.makedirs(os.path.expanduser(LOG_DIR))
     
     # 日志文件名包含日期，方便区分
     log_filename = "agent.log"
-    log_path = os.path.join(LOG_DIR, log_filename)
+    log_path = os.path.join(os.path.expanduser(LOG_DIR), log_filename)
     
     # 获取根日志记录器
     root_logger = logging.getLogger()

@@ -5,21 +5,21 @@ from src.logger import logger
 
 
 class LLMTextCompressor:
-    \"\"\"
+    """
     使用大模型压缩文本的压缩器类。
-    \"\"\"
+    """
     
     def __init__(self, llm_config):
-        \"\"\"
+        """
         初始化 LLMTextCompressor。
         
         Args:
             llm_config: 大模型配置，包含 api_key、base_url、model 等信息
-        \"\"\"
+        """
         self.llm_config = llm_config
     
     def compress(self, text, **kwargs):
-        \"\"\"
+        """
         使用大模型压缩文本。
         
         Args:
@@ -28,7 +28,7 @@ class LLMTextCompressor:
         
         Returns:
             压缩后的文本内容
-        \"\"\"
+        """
         try:
             from openai import OpenAI
             

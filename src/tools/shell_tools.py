@@ -124,8 +124,6 @@ def execute_shell(command: str, timeout: int = None, cwd: str = ".") -> str:
             return "用户取消了命令执行。"
     else:
         # 安全命令直接执行，仅显示提示
-    else:
-        # 安全命令直接执行，仅显示提示
         logger.info(f"执行命令：{command}")
 
     try:
@@ -273,10 +271,7 @@ def execute_shell(command: str, timeout: int = None, cwd: str = ".") -> str:
                 return truncate_output(f"命令启动后立即退出（退出码: {process.returncode}）\n输出：\n{full_out}\n错误：\n{stderr}")
         else:
             # 非交互式非阻塞命令：正常前台运行
-        else:
-        # 安全命令直接执行，仅显示提示
-        logger.info(f"执行命令：{command}")
-            
+            logger.info(f"执行命令：{command}")
             process = subprocess.Popen(
                 command,
                 shell=True,
