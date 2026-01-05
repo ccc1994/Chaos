@@ -10,11 +10,11 @@ import os
 import config
 from src.agent.memory import trigger_project_memory_update
 
-def setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_config):
+def setup_orchestration(architect, coder,  tester,  user_proxy,manager_config):
     """注册工具并设置带有规范驱动流程的嵌套 GroupChat。"""
     
     # 设置实现子聊天组
-    implementation_manager = setup_implementation_group_chat(coder, reviewer, tester,user_proxy, manager_config)
+    implementation_manager = setup_implementation_group_chat(coder,  tester, manager_config)
     
     def prepare_task_message(recipient, messages, sender, config):
         full_content = messages[-1].get("content", "")
@@ -52,7 +52,7 @@ def setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_
         keep_first_n=1,  
         recent_rounds=5,  
         compression_prompt="""
-        你是一个专业的大模型对话压缩专家, 下面是 coder, reviewer, tester 三个角色的对话。请将以下对话压缩到约 {target_token} 个token.
+        你是一个专业的大模型对话压缩专家, 下面是 coder, tester 两个角色的对话。请将以下对话压缩到约 {target_token} 个token.
         请以**对话摘要**的形式进行总结，保留核心信息、关键细节和重要结论。格式要求如下：\n- User: [用户的主要需求及最新指令]\n- Assistant: [Agent 的核心进展、已执行的关键操作及目前状态]\n对于已完成的任务，请简要概括；对于未解决的错误，请详细说明其行为和报错信息。不要包含具体的工具调用明细或代码段。
         """,
         target_token=500  # 压缩目标 token 数
@@ -75,14 +75,13 @@ def setup_orchestration(architect, coder, reviewer, tester, user_proxy, manager_
     context_handler = transform_messages.TransformMessages(transforms=[compressor])
     context_handler.add_to_agent(implementation_manager)
     context_handler.add_to_agent(coder)
-    context_handler.add_to_agent(reviewer)
     context_handler.add_to_agent(tester)
     architect_context_handler = transform_messages.TransformMessages(transforms=[architectCompressor])
     architect_context_handler.add_to_agent(architect)
 
     return architect
 
-def setup_implementation_group_chat(coder, reviewer, tester, user_proxy, manager_config):
+def setup_implementation_group_chat(coder,  tester, manager_config):
     
     # --- 1. 剥离 Manager 工具权限 (保持不变) ---
     selector_config = copy.deepcopy(manager_config)
@@ -91,8 +90,7 @@ def setup_implementation_group_chat(coder, reviewer, tester, user_proxy, manager
 
     # --- 2. 状态机定义 ---
     implementation_graph_dict = {
-        coder: [reviewer, coder],
-        reviewer: [coder, tester, reviewer],
+        coder: [coder, tester],
         tester: [coder, tester],
     }
 
@@ -102,9 +100,8 @@ def setup_implementation_group_chat(coder, reviewer, tester, user_proxy, manager
         "You are the orchestration manager. Your ONLY job is to look at the conversation "
         "and select the next role from the list. \n"
         "Rules:\n"
-        "1. If code is written, select Reviewer to check.\n"
-        "2. If Reviewer found bugs or errors, select Coder to fix.\n"
-        "3. If Reviewer replay APPROVED, select Tester.\n"
+        "1. If code is written, select Tester to check.\n"
+        "2. If Tester found bugs or errors, select Coder to fix.\n"
         "4. ONLY return the name of the next agent. DO NOT perform any tasks yourself."
     )
 
@@ -121,17 +118,13 @@ def setup_implementation_group_chat(coder, reviewer, tester, user_proxy, manager
         # 检查点：如果上一条消息发起了工具调用
         if last_msg["role"] == "tool":
             return last_speaker
-        
-        if last_speaker is reviewer:
-            if "REVIEWER APPROVED" in last_msg.get("content",""):
-                return tester
 
         # 如果没有工具调用，则使用传统的 'auto' 逻辑 (即让 Manager LLM 决定)
         return "auto"
 
     # --- 4. 构建 GroupChat ---
     implementation_groupchat = GroupChat(
-        agents=[coder, reviewer, tester],
+        agents=[coder, tester],
         messages=[],
         max_round=200,
         speaker_selection_method=custom_speaker_selection, 
@@ -145,7 +138,7 @@ def setup_implementation_group_chat(coder, reviewer, tester, user_proxy, manager
         groupchat=implementation_groupchat,
         llm_config=selector_config, 
         is_termination_msg=lambda x: "TERMINATE" in x.get("content", ""),
-        description="A manager who ONLY orchestrates the workflow between Coder, Reviewer, and Tester.",
+        description="A manager who ONLY orchestrates the workflow between Coder and Tester.",
         system_message="You are the manager of a coding group chat. Your role is to select the next speaker."
     )
 
