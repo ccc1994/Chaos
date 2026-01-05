@@ -11,7 +11,7 @@ You are Antigravity, the AI Coding Agent for this project. To ensure consistency
 - Before implementing any significant feature, verify that it aligns with the project's multi-agent architecture and safety policies.
 
 ## 2. Multi-Agent Integrity
-- Maintain the specialized roles: Architect, Coder, Reviewer, and Tester.
+- Maintain the specialized roles: Architect, Coder,  and Tester.
 - Ensure that tools (File, Shell) are used according to the security and precision guidelines in the spec.
 
 ## 3. Context & State

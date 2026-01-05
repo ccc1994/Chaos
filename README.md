@@ -29,9 +29,9 @@
 ### 多 Agent 角色
 
 ```
-User → Architect → Coder → Reviewer → Tester → User
+User → Architect → Coder →  Tester → User
          ↓           ↓        ↓          ↓
-      规划设计    代码实现   质量审核   功能验证
+      规划设计    代码实现    功能验证
 ```
 
 1. **Architect (架构师)**
@@ -43,11 +43,6 @@ User → Architect → Coder → Reviewer → Tester → User
    - 执行代码编写和文件操作
    - 拥有完整工具集：文件、Shell、LSP、代码搜索
 
-3. **Reviewer (代码审核专家)**
-   - 检查代码质量、安全性、一致性
-   - 无工具权限，仅提供审核反馈
-   - 检测错误循环并触发熔断机制
-
 4. **Tester (测试工程师)**
    - 执行测试命令，验证功能
    - 拥有 Shell 工具权限
@@ -55,7 +50,7 @@ User → Architect → Coder → Reviewer → Tester → User
 
 ### Agent 编排
 
-Architect -> [Coder, Reviewer, Test], 其中 [Coder, Reviewer, Test] 是一个 NestedChat 的开发小组, Architect 生成好开发计划之后, 每次将一个任务分配给开发小组, 开发小组根据任务分配, 分别执行代码实现、质量审核、功能验证等任务。并反馈给 Architect, Architect 根据反馈, 继续推进或调整开发计划
+Architect -> [Coder, Tester], 其中 [Coder, Test] 是一个 NestedChat 的开发小组, Architect 生成好开发计划之后, 每次将一个任务分配给开发小组, 开发小组根据任务分配, 分别执行代码实现、质量审核、功能验证等任务。并反馈给 Architect, Architect 根据反馈, 继续推进或调整开发计划
 
 ### 成本优化策略
 
@@ -80,7 +75,6 @@ GENERAL_MODEL_ID=qwen-flash-2025-07-28
 # 专用模型
 ARCHITECT_MODEL_ID=qwen-plus-2025-07-28
 CODER_MODEL_ID=qwen3-coder-plus
-REVIEWER_MODEL_ID=qwen3-coder-plus
 TESTER_MODEL_ID=qwen3-coder-plus
 EMBEDDING_MODEL_ID=text-embedding-v4
 ```
@@ -113,7 +107,6 @@ uv sync
 
 [Architect] 分析需求，输出任务清单
 [Coder] 执行 npx create-react-app，创建文件
-[Reviewer] 检查代码质量和结构
 [Tester] 运行 npm start 验证功能
 [User] 查看结果，提供反馈
 ```

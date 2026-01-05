@@ -25,10 +25,6 @@ def get_agent_configs():
             "model": os.getenv("CODER_MODEL_ID"),
             "system_message": load_role_prompt("Coder")
         },
-        "Reviewer": {
-            "model": os.getenv("REVIEWER_MODEL_ID"),
-            "system_message": load_role_prompt("Reviewer")
-        },
         "Tester": {
             "model": os.getenv("TESTER_MODEL_ID"),
             "system_message": load_role_prompt("Tester")
@@ -92,13 +88,6 @@ def create_agents(api_key: str, base_url: str, mcp_manager=None):
         code_execution_config=False
     )
 
-    reviewer = AssistantAgent(
-        name="Reviewer",
-        system_message=configs["Reviewer"]["system_message"],
-        llm_config=make_config(configs["Reviewer"]["model"]),
-        code_execution_config=False
-    )
-
     tester = AssistantAgent(
         name="Tester",
         system_message=configs["Tester"]["system_message"],
@@ -137,13 +126,6 @@ def create_agents(api_key: str, base_url: str, mcp_manager=None):
             )
             register_function(
                 tool,
-                caller=reviewer,
-                executor=reviewer, 
-                name=tool.__name__,
-                description=tool.__doc__
-            )
-            register_function(
-                tool,
                 caller=tester,
                 executor=tester, 
                 name=tool.__name__,
@@ -166,13 +148,6 @@ def create_agents(api_key: str, base_url: str, mcp_manager=None):
                 name=tool.__name__,
                 description=tool.__doc__
             )
-            register_function(
-                tool,
-                caller=reviewer,
-                executor=reviewer,
-                name=tool.__name__,
-                description=tool.__doc__
-            )
 
         # 4. 注册代码搜索工具 (LlamaIndex)
         register_function(
@@ -189,13 +164,6 @@ def create_agents(api_key: str, base_url: str, mcp_manager=None):
             name="semantic_code_search",
             description=semantic_code_search.__doc__
         )
-        register_function(
-            semantic_code_search,
-            caller=reviewer,
-            executor=reviewer,
-            name="semantic_code_search",
-            description=semantic_code_search.__doc__
-        )
 
         # 2. 为 Coder 注册 Shell 工具（用于运行构建、测试等命令）
         for tool in get_shell_tools():
@@ -206,13 +174,6 @@ def create_agents(api_key: str, base_url: str, mcp_manager=None):
                 name=tool.__name__,
                 description=tool.__doc__
             )
-            # register_function(
-            #     tool,
-            #     caller=reviewer,
-            #     executor=reviewer,
-            #     name=tool.__name__,
-            #     description=tool.__doc__
-            # )
             register_function(
                 tool,
                 caller=tester,
@@ -225,7 +186,7 @@ def create_agents(api_key: str, base_url: str, mcp_manager=None):
     if mcp_manager:
         # Register definitions for Agents (Callers)
         for tool_def in mcp_manager.tools:
-            for agent in [architect, coder, reviewer]:
+            for agent in [architect, coder]:
                 if agent.llm_config:
                     if "tools" not in agent.llm_config["config_list"][0]:
                         agent.llm_config["config_list"][0]["tools"] = []
@@ -252,4 +213,4 @@ def create_agents(api_key: str, base_url: str, mcp_manager=None):
                 function_map={name: func}
             )
 
-    return architect, coder, reviewer, tester, user_proxy, make_manager_config()
+    return architect, coder, tester, user_proxy, make_manager_config()
