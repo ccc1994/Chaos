@@ -55,7 +55,7 @@ def setup_orchestration(architect, coder,  tester,  user_proxy,manager_config):
         你是一个专业的大模型对话压缩专家, 下面是 coder, tester 两个角色的对话。请将以下对话压缩到约 {target_token} 个token.
         请以**对话摘要**的形式进行总结，保留核心信息、关键细节和重要结论。格式要求如下：\n- User: [用户的主要需求及最新指令]\n- Assistant: [Agent 的核心进展、已执行的关键操作及目前状态]\n对于已完成的任务，请简要概括；对于未解决的错误，请详细说明其行为和报错信息。不要包含具体的工具调用明细或代码段。
         """,
-        target_token=500  # 压缩目标 token 数
+        target_token=2000  # 压缩目标 token 数
     )
     compressor.agent_name = "ImplementationGroup"
 
