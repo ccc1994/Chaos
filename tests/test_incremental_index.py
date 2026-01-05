@@ -16,6 +16,7 @@ from src.tools.index_tools import build_index, update_index, start_index_watcher
 def test_incremental_indexing():
     # 1. 加载环境变量
     load_dotenv()
+    os.environ["ENABLE_INDEXING"] = "true"
     
     project_root = os.getcwd()
     print(f"--- 测试增量索引功能 ---")

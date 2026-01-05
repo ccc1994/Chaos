@@ -148,6 +148,10 @@ def build_index(project_root: str):
     """
     global _index
     
+    if os.getenv("ENABLE_INDEXING", "false").lower() != "true":
+        logger.info("索引功能已禁用 (ENABLE_INDEXING != 'true')。")
+        return
+
     if not _initialize_settings():
         return
         
@@ -224,12 +228,16 @@ def build_index(project_root: str):
                     nodes = _process_documents_to_nodes(documents)
                 except ValueError:
                     # 如果目录为空或没有匹配文件，reader.load_data() 会抛出 ValueError
-                    logger.warning(f"在 {project_root} 中未找到可索引的文件，将创建空索引。")
+                    logger.warning(f"在 {project_root} 中未找到可索引的文件，跳过索引构建。")
                     nodes = []
                 
-                _index = VectorStoreIndex(nodes, storage_context=storage_context)
-                _index.storage_context.persist(persist_dir=db_path)
-                logger.info(f"索引构建完成并存入 ChromaDB，路径: {db_path}")
+                if nodes:
+                    _index = VectorStoreIndex(nodes, storage_context=storage_context)
+                    _index.storage_context.persist(persist_dir=db_path)
+                    logger.info(f"索引构建完成并存入 ChromaDB，路径: {db_path}")
+                else:
+                    logger.warning("没有可索引的节点，跳过索引创建和持久化。")
+                    _index = None  # 确保索引状态为 None
         except Exception as e:
             logger.error(f"构建或加载 ChromaDB 索引时出错: {e}")
 
@@ -366,6 +374,9 @@ def start_index_watcher(project_root: str):
     """
     global _observer
     
+    if os.getenv("ENABLE_INDEXING", "false").lower() != "true":
+        return
+
     if _observer is not None:
         logger.warning("索引监听器已在运行中。")
         return

@@ -133,7 +133,7 @@ def setup_implementation_group_chat(coder, reviewer, tester, user_proxy, manager
     implementation_groupchat = GroupChat(
         agents=[coder, reviewer, tester],
         messages=[],
-        max_round=50,
+        max_round=200,
         speaker_selection_method=custom_speaker_selection, 
         allowed_or_disallowed_speaker_transitions=implementation_graph_dict,
         speaker_transitions_type="allowed",
