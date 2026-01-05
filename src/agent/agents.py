@@ -206,16 +206,13 @@ def create_agents(api_key: str, base_url: str, mcp_manager=None):
                 name=tool.__name__,
                 description=tool.__doc__
             )
-            register_function(
-                tool,
-                caller=reviewer,
-                executor=reviewer,
-                name=tool.__name__,
-                description=tool.__doc__
-            )
-
-        # 4. 为 Tester 注册 Shell 工具
-        for tool in get_shell_tools():
+            # register_function(
+            #     tool,
+            #     caller=reviewer,
+            #     executor=reviewer,
+            #     name=tool.__name__,
+            #     description=tool.__doc__
+            # )
             register_function(
                 tool,
                 caller=tester,
